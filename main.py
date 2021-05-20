@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 import openpyxl
+from openpyxl import Workbook
 
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
 import sys
@@ -18,17 +19,30 @@ class mywindow(QtWidgets.QMainWindow):
         filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
         wb = openpyxl.load_workbook(filename[0])
         # print(wb.get_sheet_names()[2])
-        sheet = (wb.get_sheet_by_name(wb.get_sheet_names()[2]))
-        massive = []
-        for x in range(1,9,1):
-            print(massive)
-            massive.append([])
-            print(massive[x-1])
-            for y in range(1,24,1):
-                massive[x-1].append(sheet.cell(row=x,column=y).value)
+        sheets = wb.sheetnames
+        sheet = sheets[2]
+        name_sheet = wb[sheet]
 
-        print(massive)
-
+        # for row in range(9, name_sheet.max_row + 1):
+        #     for column in "BCVJP":
+        #         cell_name = "{}{}".format(column, row)
+        #         print(name_sheet[cell_name].value)
+        n = 1
+        wb = Workbook()
+        ws = wb.active
+        for cell in name_sheet['A']:
+            # print(cell.value)
+            ws['A' + str(n)] = cell.value
+            n = n + 1
+        # wb.save('balances.xlsx')
+        print('finished1')
+        n = 1
+        for cell in name_sheet['C']:
+            # print(cell.value)
+            ws['C' + str(n)] = cell.value
+            n = n + 1
+        wb.save('balances.xlsx')
+        print('finished2')
 
 
 app = QtWidgets.QApplication([])
