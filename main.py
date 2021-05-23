@@ -1,5 +1,6 @@
+import PyQt5
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QAbstractItemView
 import openpyxl
 from openpyxl import Workbook
 import re
@@ -18,12 +19,21 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.pushButton_2.clicked.connect(self.btn_clicked)
         self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
-        self.setStyleSheet('.QWidget {background-color: #333333;}')
-        self.ui.tableWidget.setStyleSheet('.QTableWidget {border-radius: 8px;}')
-        self.ui.pushButton_2.setStyleSheet('.QPushButton {background-color: #444444;color: white;border-radius: 8px;}')
-        self.ui.pushButton_3.setStyleSheet('.QPushButton {background-color: #444444;color: white;border-radius: 8px;}')
+        self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
+        stylesheet = "::section{background-color:rgb(252, 246, 5);}"
+        self.ui.tableWidget.setStyleSheet('.QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}')
+        self.ui.tableWidget.horizontalHeader().setStyleSheet(stylesheet)
+        self.ui.tableWidget.verticalHeader().setStyleSheet(stylesheet)
+        self.setStyleSheet('.QWidget {border-image: url(1C.png);}')
+        self.ui.tableWidget.setStyleSheet('.QTableWidget {background-color: rgba(143, 144, 146, 100);border-radius: '
+                                          '8px;}')
+        self.ui.pushButton_2.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
+                                           '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
+        self.ui.pushButton_3.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
+                                           '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
         self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
-        self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #333333;color: white;}')
+        self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
 
     def btn_clicked(self):
         filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
@@ -208,6 +218,7 @@ class MyWindow(QtWidgets.QMainWindow):
 app = QtWidgets.QApplication([])
 application = MyWindow()
 application.setWindowTitle("Конвертер ведомости учета имущества")
+# app.setStyle('Fusion')
 application.show()
 
 sys.exit(app.exec())
