@@ -30,13 +30,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>Конвертировать</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="pushButton_3">
           <property name="text">
            <string>Сохранить в Excel</string>
@@ -65,7 +58,7 @@
      <x>0</x>
      <y>0</y>
      <width>777</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

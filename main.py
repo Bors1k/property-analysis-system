@@ -4,21 +4,28 @@ import openpyxl
 from openpyxl import Workbook
 import re
 
-from openpyxl.styles import Font, NamedStyle, Alignment
+from openpyxl.styles import Font, Alignment
 
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
 import sys
 import os
 
 
-class mywindow(QtWidgets.QMainWindow):
+class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        super(mywindow, self).__init__()
+        super(MyWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.pushButton_2.clicked.connect(self.btnclicked)
+        self.ui.pushButton_2.clicked.connect(self.btn_clicked)
+        self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
+        self.setStyleSheet('.QWidget {background-color: #333333;}')
+        self.ui.tableWidget.setStyleSheet('.QTableWidget {background-color: #444444;}')
+        self.ui.pushButton_2.setStyleSheet('.QPushButton {background-color: #444444;color: white;}')
+        self.ui.pushButton_3.setStyleSheet('.QPushButton {background-color: #444444;color: white;}')
+        self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
+        self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #333333;color: white;}')
 
-    def btnclicked(self):
+    def btn_clicked(self):
         filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
         wb = openpyxl.load_workbook(filename[0])
         sheets = wb.sheetnames
@@ -26,10 +33,9 @@ class mywindow(QtWidgets.QMainWindow):
         name_sheet = wb[sheet]
         n = 1
         k = 1
-        wb = Workbook()
-        ws = wb.active
+        self.wb = Workbook()
+        ws = self.wb.active
         ws.title = "Сводный перечень имущества"
-
 
         ws.row_dimensions[1].ht = 39.6
         znach = ''
@@ -96,7 +102,7 @@ class mywindow(QtWidgets.QMainWindow):
         n = 1
         k = 1
         # ws.delete_rows(2, 1)
-        wb.save('balances.xlsx')
+        # wb.save('balances.xlsx')
         for cell in ws['B']:
             ws['F' + str(k)] = "=YEARFRAC(E" + str(k) + ",TODAY(),1)"
             ws['F' + str(k)].font = Font(size="8", name='Arial')
@@ -106,7 +112,7 @@ class mywindow(QtWidgets.QMainWindow):
         print('finished5')
         n = 1
         k = 1
-        wb.save('balances.xlsx')
+        # wb.save('balances.xlsx')
         for cell in ws['B']:
             ws['H' + str(k)] = "=IF((G" + str(k) + "-F" + str(k) + ")<0,F" + str(k) + "-G" + str(k) + ",\"в пределах " \
                                                                                                       "срока\") "
@@ -149,12 +155,20 @@ class mywindow(QtWidgets.QMainWindow):
         # for cell in ws['D']:
         #     cell.number_format = '0'
         ws.auto_filter.ref = ws.dimensions
-        wb.save('balances.xlsx')
+        # wb.save('balances.xlsx')
         print('finishedEnd')
+        return wb
+
+    def save_btn_clicked(self):
+        # QFileDialog.getSaveFileName(self.ui.pushButton_3, 'Dialog Title', '', selectedFilter='*.xlsx')
+        # self.wb.save = QFileDialog.getSaveFileName(self, 'Dialog Title', '', selectedFilter='*.xlsx')
+        file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
+        self.wb.save(file_save)
 
 
 app = QtWidgets.QApplication([])
-application = mywindow()
+application = MyWindow()
+application.setWindowTitle("Конвертер ведомости учета имущества")
 application.show()
 
 sys.exit(app.exec())
