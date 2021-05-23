@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem
 import openpyxl
 from openpyxl import Workbook
 import re
@@ -19,9 +19,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_2.clicked.connect(self.btn_clicked)
         self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
         self.setStyleSheet('.QWidget {background-color: #333333;}')
-        self.ui.tableWidget.setStyleSheet('.QTableWidget {background-color: #444444;}')
-        self.ui.pushButton_2.setStyleSheet('.QPushButton {background-color: #444444;color: white;}')
-        self.ui.pushButton_3.setStyleSheet('.QPushButton {background-color: #444444;color: white;}')
+        self.ui.tableWidget.setStyleSheet('.QTableWidget {border-radius: 8px;}')
+        self.ui.pushButton_2.setStyleSheet('.QPushButton {background-color: #444444;color: white;border-radius: 8px;}')
+        self.ui.pushButton_3.setStyleSheet('.QPushButton {background-color: #444444;color: white;border-radius: 8px;}')
         self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
         self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #333333;color: white;}')
 
@@ -152,6 +152,47 @@ class MyWindow(QtWidgets.QMainWindow):
         ws['H1'] = 'Срок превышен, лет'
         ws['H1'].font = Font(bold=True, size="10", name='Arial')
         ws['H1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+
+        self.ui.tableWidget.setColumnCount(ws.max_column)
+        self.ui.tableWidget.setHorizontalHeaderLabels([str(ws['A1'].value), str(ws['B1'].value), str(ws['C1'].value),
+                                                       str(ws['D1'].value), str(ws['E1'].value), str(ws['F1'].value),
+                                                       str(ws['G1'].value), str(ws['H1'].value)])
+
+        self.ui.tableWidget.setRowCount(ws.max_row)
+
+        schet = 0
+        for cell in ws['A']:
+            self.ui.tableWidget.setItem(schet, 0, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0
+        for cell in ws['B']:
+            self.ui.tableWidget.setItem(schet, 1, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0
+        for cell in ws['C']:
+            self.ui.tableWidget.setItem(schet, 2, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0
+        for cell in ws['D']:
+            self.ui.tableWidget.setItem(schet, 3, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0
+        for cell in ws['E']:
+            self.ui.tableWidget.setItem(schet, 4, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0
+        for cell in ws['F']:
+            self.ui.tableWidget.setItem(schet, 5, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0
+        for cell in ws['G']:
+            self.ui.tableWidget.setItem(schet, 6, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0
+        for cell in ws['H']:
+            self.ui.tableWidget.setItem(schet, 7, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        self.ui.tableWidget.resizeColumnsToContents()
         # for cell in ws['D']:
         #     cell.number_format = '0'
         ws.auto_filter.ref = ws.dimensions
@@ -160,8 +201,6 @@ class MyWindow(QtWidgets.QMainWindow):
         return wb
 
     def save_btn_clicked(self):
-        # QFileDialog.getSaveFileName(self.ui.pushButton_3, 'Dialog Title', '', selectedFilter='*.xlsx')
-        # self.wb.save = QFileDialog.getSaveFileName(self, 'Dialog Title', '', selectedFilter='*.xlsx')
         file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
         self.wb.save(file_save)
 
