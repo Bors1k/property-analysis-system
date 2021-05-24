@@ -226,7 +226,8 @@ class MyWindow(QtWidgets.QMainWindow):
                                            '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
         self.ui.pushButton_3.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
                                            '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
-        self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
+        self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;} .QMenuBar:item:selected{'
+                                      'background: #444444;color: #fcf605;}') 
         self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
