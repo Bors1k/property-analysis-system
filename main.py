@@ -1,12 +1,10 @@
-import PyQt5
 from PyQt5 import QtWidgets
-from PyQt5 import QtCore
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QFileDialog, QLabel, QTableWidgetItem, QAbstractItemView
 import openpyxl
 from openpyxl import Workbook
 import re
-from PyQt5.QtCore import QSize, QThread, QTimer, Qt
+from PyQt5.QtCore import QSize, QThread
 
 from openpyxl.styles import Font, Alignment
 
