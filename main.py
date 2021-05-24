@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QFileDialog, QLabel, QTableWidgetItem, QAbstractItemView
 import openpyxl
@@ -205,6 +205,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.setWindowIcon(QtGui.QIcon('roskazna.png'))
         self.ui.label_animation = QLabel(self)
         self.ui.label_animation.setFixedHeight(227)
         self.ui.label_animation.setFixedWidth(128)
@@ -227,6 +228,8 @@ class MyWindow(QtWidgets.QMainWindow):
                                            '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
         self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
         self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
+        self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
+        self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
 
         self.my_thread = MyThread(my_window=self)
 
