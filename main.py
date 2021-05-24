@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QAbstractItemView
 import openpyxl
 from openpyxl import Workbook
 import re
+from PyQt5.QtCore import QThread
 
 from openpyxl.styles import Font, Alignment
 
@@ -12,39 +13,20 @@ import sys
 import os
 
 
-class MyWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super(MyWindow, self).__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        self.ui.pushButton_2.clicked.connect(self.btn_clicked)
-        self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
-        self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
-        stylesheet = "::section{background-color:rgb(252, 246, 5);}"
-        self.ui.tableWidget.setStyleSheet('.QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}')
-        self.ui.tableWidget.horizontalHeader().setStyleSheet(stylesheet)
-        self.ui.tableWidget.verticalHeader().setStyleSheet(stylesheet)
-        self.setStyleSheet('.QWidget {border-image: url(1C.png);}')
-        self.ui.tableWidget.setStyleSheet('.QTableWidget {background-color: rgba(143, 144, 146, 100);border-radius: '
-                                          '8px;}')
-        self.ui.pushButton_2.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
-                                           '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
-        self.ui.pushButton_3.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
-                                           '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
-        self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
-        self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
+class MyThread(QThread):
+    def __init__(self, my_window, parent=None):
+        super(MyThread, self).__init__()
+        self.my_window = my_window
 
-    def btn_clicked(self):
-        filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
-        wb = openpyxl.load_workbook(filename[0])
+    def run(self):
+        wb = openpyxl.load_workbook(self.my_window.filename[0])
         sheets = wb.sheetnames
         sheet = sheets[2]
         name_sheet = wb[sheet]
         n = 1
         k = 1
-        self.wb = Workbook()
-        ws = self.wb.active
+        self.my_window.wb = Workbook()
+        ws = self.my_window.wb.active
         ws.title = "Сводный перечень имущества"
 
         ws.row_dimensions[1].ht = 39.6
@@ -163,52 +145,85 @@ class MyWindow(QtWidgets.QMainWindow):
         ws['H1'].font = Font(bold=True, size="10", name='Arial')
         ws['H1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
 
-        self.ui.tableWidget.setColumnCount(ws.max_column)
-        self.ui.tableWidget.setHorizontalHeaderLabels([str(ws['A1'].value), str(ws['B1'].value), str(ws['C1'].value),
+        self.my_window.ui.tableWidget.setColumnCount(ws.max_column)
+        self.my_window.ui.tableWidget.setHorizontalHeaderLabels([str(ws['A1'].value), str(ws['B1'].value), str(ws['C1'].value),
                                                        str(ws['D1'].value), str(ws['E1'].value), str(ws['F1'].value),
                                                        str(ws['G1'].value), str(ws['H1'].value)])
 
-        self.ui.tableWidget.setRowCount(ws.max_row)
+        self.my_window.ui.tableWidget.setRowCount(ws.max_row)
 
         schet = 0
         for cell in ws['A']:
-            self.ui.tableWidget.setItem(schet, 0, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(schet, 0, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['B']:
-            self.ui.tableWidget.setItem(schet, 1, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(schet, 1, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['C']:
-            self.ui.tableWidget.setItem(schet, 2, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(schet, 2, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['D']:
-            self.ui.tableWidget.setItem(schet, 3, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(schet, 3, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['E']:
-            self.ui.tableWidget.setItem(schet, 4, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(schet, 4, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['F']:
-            self.ui.tableWidget.setItem(schet, 5, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(schet, 5, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['G']:
-            self.ui.tableWidget.setItem(schet, 6, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(schet, 6, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['H']:
-            self.ui.tableWidget.setItem(schet, 7, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(schet, 7, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
-        self.ui.tableWidget.resizeColumnsToContents()
+        self.my_window.ui.tableWidget.resizeColumnsToContents()
         # for cell in ws['D']:
         #     cell.number_format = '0'
         ws.auto_filter.ref = ws.dimensions
         # wb.save('balances.xlsx')
         print('finishedEnd')
-        return wb
+
+
+class MyWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super(MyWindow, self).__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui.pushButton_2.clicked.connect(self.btn_clicked)
+        self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
+        self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
+        stylesheet = "::section{background-color:rgb(252, 246, 5);}"
+        self.ui.tableWidget.setStyleSheet('.QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}')
+        self.ui.tableWidget.horizontalHeader().setStyleSheet(stylesheet)
+        self.ui.tableWidget.verticalHeader().setStyleSheet(stylesheet)
+        self.setStyleSheet('.QWidget {border-image: url(1C.png);}')
+        self.ui.tableWidget.setStyleSheet('.QTableWidget {background-color: rgba(143, 144, 146, 100);border-radius: '
+                                          '8px;}')
+        self.ui.pushButton_2.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
+                                           '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
+        self.ui.pushButton_3.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
+                                           '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
+        self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
+        self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
+
+
+        self.my_thread = MyThread(my_window=self)
+        # self.new_thread()
+    def new_thread(self):
+        self.my_thread.start()
+
+    def btn_clicked(self):
+        self.filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
+        self.new_thread()
 
     def save_btn_clicked(self):
         file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
