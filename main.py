@@ -1,10 +1,12 @@
 import PyQt5
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QAbstractItemView
+from PyQt5 import QtCore
+from PyQt5.QtGui import QMovie
+from PyQt5.QtWidgets import QFileDialog, QLabel, QTableWidgetItem, QAbstractItemView
 import openpyxl
 from openpyxl import Workbook
 import re
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QSize, QThread, QTimer,Qt
 
 from openpyxl.styles import Font, Alignment
 
@@ -19,6 +21,9 @@ class MyThread(QThread):
         self.my_window = my_window
 
     def run(self):
+        self.my_window.ui.label_animation.move(int(self.my_window.width()*0.5) - int(self.my_window.ui.label_animation.width()*0.5),int(self.my_window.height()*0.5)-int(self.my_window.ui.label_animation.height()*0.5))
+        self.my_window.ui.pushButton_2.setEnabled(False)
+        self.my_window.ui.pushButton_3.setEnabled(False)
         wb = openpyxl.load_workbook(self.my_window.filename[0])
         sheets = wb.sheetnames
         sheet = sheets[2]
@@ -190,13 +195,22 @@ class MyThread(QThread):
         ws.auto_filter.ref = ws.dimensions
         # wb.save('balances.xlsx')
         print('finishedEnd')
-
+        self.my_window.ui.pushButton_2.setEnabled(True)
+        self.my_window.ui.pushButton_3.setEnabled(True)
+        self.my_window.movie.stop()
+        self.my_window.ui.label_animation.setMovie(None)
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        
+        self.ui.label_animation = QLabel(self)
+        self.ui.label_animation.setFixedHeight(227)
+        self.ui.label_animation.setFixedWidth(128)
+        self.ui.label_animation.move(int(self.width()*0.5) - int(self.ui.label_animation.width()*0.5),int(self.height()*0.5)-int(self.ui.label_animation.height()*0.5))
+        self.ui.label_animation.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.ui.pushButton_2.clicked.connect(self.btn_clicked)
         self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -214,12 +228,17 @@ class MyWindow(QtWidgets.QMainWindow):
                                            '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
         self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
         self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
-
-
+        
         self.my_thread = MyThread(my_window=self)
+
         # self.new_thread()
     def new_thread(self):
         self.my_thread.start()
+        # self.movie = QMovie('Ajax-loader.gif')
+        self.movie = QMovie('Spinner.gif')
+        self.movie.setScaledSize(QSize(128,227))
+        self.ui.label_animation.setMovie(self.movie)
+        self.movie.start()
 
     def btn_clicked(self):
         self.filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
@@ -233,7 +252,6 @@ class MyWindow(QtWidgets.QMainWindow):
 app = QtWidgets.QApplication([])
 application = MyWindow()
 application.setWindowTitle("Конвертер ведомости учета имущества")
-# app.setStyle('Fusion')
 application.show()
 
 sys.exit(app.exec())
