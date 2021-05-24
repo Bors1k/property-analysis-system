@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QFileDialog, QLabel, QTableWidgetItem, QAbstractItem
 import openpyxl
 from openpyxl import Workbook
 import re
-from PyQt5.QtCore import QSize, QThread, QTimer,Qt
+from PyQt5.QtCore import QSize, QThread, QTimer, Qt
 
 from openpyxl.styles import Font, Alignment
 
@@ -21,7 +21,6 @@ class MyThread(QThread):
         self.my_window = my_window
 
     def run(self):
-        self.my_window.ui.label_animation.move(int(self.my_window.width()*0.5) - int(self.my_window.ui.label_animation.width()*0.5),int(self.my_window.height()*0.5)-int(self.my_window.ui.label_animation.height()*0.5))
         self.my_window.ui.pushButton_2.setEnabled(False)
         self.my_window.ui.pushButton_3.setEnabled(False)
         wb = openpyxl.load_workbook(self.my_window.filename[0])
@@ -151,9 +150,10 @@ class MyThread(QThread):
         ws['H1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
 
         self.my_window.ui.tableWidget.setColumnCount(ws.max_column)
-        self.my_window.ui.tableWidget.setHorizontalHeaderLabels([str(ws['A1'].value), str(ws['B1'].value), str(ws['C1'].value),
-                                                       str(ws['D1'].value), str(ws['E1'].value), str(ws['F1'].value),
-                                                       str(ws['G1'].value), str(ws['H1'].value)])
+        self.my_window.ui.tableWidget.setHorizontalHeaderLabels(
+            [str(ws['A1'].value), str(ws['B1'].value), str(ws['C1'].value),
+             str(ws['D1'].value), str(ws['E1'].value), str(ws['F1'].value),
+             str(ws['G1'].value), str(ws['H1'].value)])
 
         self.my_window.ui.tableWidget.setRowCount(ws.max_row)
 
@@ -200,17 +200,18 @@ class MyThread(QThread):
         self.my_window.movie.stop()
         self.my_window.ui.label_animation.setMovie(None)
 
+
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        
+
         self.ui.label_animation = QLabel(self)
         self.ui.label_animation.setFixedHeight(227)
         self.ui.label_animation.setFixedWidth(128)
-        self.ui.label_animation.move(int(self.width()*0.5) - int(self.ui.label_animation.width()*0.5),int(self.height()*0.5)-int(self.ui.label_animation.height()*0.5))
-        self.ui.label_animation.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
+                                     int(self.height() * 0.5) - int(self.ui.label_animation.height() * 0.5))
         self.ui.pushButton_2.clicked.connect(self.btn_clicked)
         self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -228,15 +229,19 @@ class MyWindow(QtWidgets.QMainWindow):
                                            '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
         self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;}')
         self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
-        
+
         self.my_thread = MyThread(my_window=self)
 
-        # self.new_thread()
+    def resizeEvent(self, event):
+        self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
+                                     int(self.height() * 0.5) - int(self.ui.label_animation.height() * 0.5))
+        QtWidgets.QMainWindow.resizeEvent(self, event)
+
     def new_thread(self):
         self.my_thread.start()
         # self.movie = QMovie('Ajax-loader.gif')
         self.movie = QMovie('Spinner.gif')
-        self.movie.setScaledSize(QSize(128,227))
+        self.movie.setScaledSize(QSize(128, 227))
         self.ui.label_animation.setMovie(self.movie)
         self.movie.start()
 
