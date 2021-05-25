@@ -222,7 +222,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_3.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
                                            '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
         self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;} .QMenuBar:item:selected{'
-                                      'background: #444444;color: #fcf605;}') 
+                                      'background: #444444;color: #fcf605;} .QMenu {background-color: #444444;color: white;} .QMenu:item:selected{'
+                                      'background: #444444;color: #fcf605;} ' ) 
         self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
@@ -269,11 +270,10 @@ class AboutWindows(QtWidgets.QDialog):
         super(AboutWindows, self).__init__(parent)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
+        self.setWindowTitle("О программе")
 
 app = QtWidgets.QApplication([])
 application = MyWindow()
-# aboutForm = AboutWindows()
-# aboutForm.show()
 application.setWindowTitle("Конвертер ведомости учета имущества")
 application.show()
 
