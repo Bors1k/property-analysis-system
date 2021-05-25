@@ -19,6 +19,7 @@ class MyThread(QThread):
         self.my_window = my_window
 
     def run(self):
+        self.my_window.ui.statusbar.showMessage('Анализ и сопоставление данных исходной таблицы')
         self.my_window.ui.pushButton_2.setEnabled(False)
         self.my_window.ui.pushButton_3.setEnabled(False)
         wb = openpyxl.load_workbook(self.my_window.filename[0])
@@ -50,7 +51,7 @@ class MyThread(QThread):
                     ws['A' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
                     k = k + 1
             n = n + 1
-        print('finished1')
+        self.my_window.ui.statusbar.showMessage('Конвертация данных')
         n = 1
         k = 1
         for cell in name_sheet['C']:
@@ -60,7 +61,6 @@ class MyThread(QThread):
                 ws['B' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
                 k = k + 1
             n = n + 1
-        print('finished2')
         n = 1
         k = 1
         for cell in name_sheet['J']:
@@ -71,19 +71,15 @@ class MyThread(QThread):
                 ws['D' + str(k)].number_format = '0'
                 k = k + 1
             n = n + 1
-        print('finished3')
         n = 1
         k = 1
-        # my_date_style = NamedStyle(name='my_date_style', number_format='dd.mm.yyyy')
         for cell in name_sheet['P']:
             if name_sheet['C' + str(n)].value is not None:
                 ws['E' + str(k)] = cell.value
                 ws['E' + str(k)].font = Font(size="8", name='Arial')
                 ws['E' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
-                # ws['E' + str(k)].style = my_date_style
                 k = k + 1
             n = n + 1
-        print('finished4')
         n = 1
         k = 1
         for cell in name_sheet['V']:
@@ -95,18 +91,15 @@ class MyThread(QThread):
             n = n + 1
         n = 1
         k = 1
-        # ws.delete_rows(2, 1)
-        # wb.save('balances.xlsx')
         for cell in ws['B']:
             ws['F' + str(k)] = "=YEARFRAC(E" + str(k) + ",TODAY(),1)"
             ws['F' + str(k)].font = Font(size="8", name='Arial')
             ws['F' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
             k = k + 1
             n = n + 1
-        print('finished5')
+        self.my_window.ui.statusbar.showMessage('Последние штрихи')
         n = 1
         k = 1
-        # wb.save('balances.xlsx')
         for cell in ws['B']:
             ws['H' + str(k)] = "=IF((G" + str(k) + "-F" + str(k) + ")<0,F" + str(k) + "-G" + str(k) + ",\"в пределах " \
                                                                                                       "срока\") "
@@ -115,7 +108,6 @@ class MyThread(QThread):
             ws['H' + str(k)].number_format = '0.0'
             k = k + 1
             n = n + 1
-        print('finished5')
 
         ws.column_dimensions['A'].width = 20
         ws.column_dimensions['B'].width = 48
@@ -191,8 +183,7 @@ class MyThread(QThread):
         # for cell in ws['D']:
         #     cell.number_format = '0'
         ws.auto_filter.ref = ws.dimensions
-        # wb.save('balances.xlsx')
-        print('finishedEnd')
+        self.my_window.ui.statusbar.showMessage('Таблица сконвертирована')
         self.my_window.ui.pushButton_2.setEnabled(True)
         self.my_window.ui.pushButton_3.setEnabled(True)
         self.my_window.movie.stop()
@@ -231,6 +222,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
+        self.ui.label.setStyleSheet('.QLabel{border-image: url(roskazna.png);}')
 
         self.my_thread = MyThread(my_window=self)
 
