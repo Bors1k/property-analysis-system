@@ -32,8 +32,9 @@ class MyThread(QThread):
         if sheets.count==1:
             sheet = sheets[0]
         else:
-            self.my_window.chooseForm = ChooseWindows(self.my_window)
-            self.my_window.chooseForm.show()
+            # self.my_window.startChooseForm()
+            # self.my_window.chooseForm = ChooseWindows()
+            # self.my_window.chooseForm.show()
             sheet = sheets[2]
 
 
@@ -202,9 +203,14 @@ class MyThread(QThread):
         self.my_window.ui.label_animation.setMovie(None)
         self.my_window.movie.stop()
 
+class ChooseListThread(QThread):
+    def __init__(self, parent=None):
+        super(ChooseListThread, self).__init__()
+    def run(self):
+        chooseForm = ChooseWindows()
+        chooseForm.show()
 
 class MyWindow(QtWidgets.QMainWindow):
-    # someSignal = QtCore.pyqtSignal(QMainWindow)
     def __init__(self):
         super(MyWindow, self).__init__()
         self.ui = Ui_MainWindow()
@@ -242,6 +248,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.label.setStyleSheet('.QLabel{border-image: url(roskazna.png);}')
 
         self.my_thread = MyThread(my_window=self)
+        self.chooseThread = ChooseListThread()
 
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
@@ -250,12 +257,13 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def new_thread(self):
         self.my_thread.start()
-        # self.movie = QMovie('Ajax-loader.gif')
         self.movie = QMovie('Spinner.gif')
         self.movie.setScaledSize(QSize(70, 130))
         self.ui.label_animation.setMovie(self.movie)
-        # self.someSignal.connect(self)
         self.movie.start()
+
+    def startChooseForm(self):
+        self.chooseThread.start()
 
     def btn_clicked(self):
         self.filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
@@ -269,25 +277,25 @@ class MyWindow(QtWidgets.QMainWindow):
         file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
         if str(file_save) != "":
             self.wb.save(file_save)
-            self.ui.statusbar.showMessage('Таблица сохраена')
+            self.ui.statusbar.showMessage('Таблица сохранена')
 
     def OpenAbout(self):
         print("triggered")
         if(self.aboutForm!=None):
             self.aboutForm.close()
-        self.aboutForm = AboutWindows(self)
+        self.aboutForm = AboutWindows()
         self.aboutForm.show()
 
 class AboutWindows(QtWidgets.QDialog):
-    def __init__(self,parent):
-        super(AboutWindows, self).__init__(parent)
+    def __init__(self):
+        super(AboutWindows, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("О программе")
 
 class ChooseWindows(QtWidgets.QDialog):
-    def __init__(self,parent):
-        super(ChooseWindows, self).__init__(parent)
+    def __init__(self):
+        super(ChooseWindows, self).__init__()
         self.ui = Choose_Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("Выберите лист")
