@@ -1,17 +1,18 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5 import QtCore
 from PyQt5.QtGui import QMovie
-from PyQt5.QtWidgets import QFileDialog, QLabel, QTableWidgetItem, QAbstractItemView
+from PyQt5.QtWidgets import QFileDialog, QLabel, QMainWindow, QTableWidgetItem, QAbstractItemView
 import openpyxl
 from openpyxl import Workbook
 import re
-from PyQt5.QtCore import QSize, QThread
+from PyQt5.QtCore import QSize, QThread, pyqtSignal 
 
 from openpyxl.styles import Font, Alignment
 from openpyxl.utils.exceptions import InvalidFileException
 
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
 from AboutForm import Ui_Dialog
+from ChooseForm import Choose_Ui_Dialog
 import sys
 import os
 
@@ -27,6 +28,15 @@ class MyThread(QThread):
         self.my_window.ui.pushButton_3.setEnabled(False)
         wb = openpyxl.load_workbook(self.my_window.filename[0])
         sheets = wb.sheetnames
+
+        if sheets.count==1:
+            sheet = sheets[0]
+        else:
+            self.my_window.chooseForm = ChooseWindows(self.my_window)
+            self.my_window.chooseForm.show()
+            sheet = sheets[2]
+
+
         sheet = sheets[2]
         name_sheet = wb[sheet]
         n = 1
@@ -194,11 +204,13 @@ class MyThread(QThread):
 
 
 class MyWindow(QtWidgets.QMainWindow):
+    # someSignal = QtCore.pyqtSignal(QMainWindow)
     def __init__(self):
         super(MyWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.aboutForm = None
+        self.chooseForm = None
         self.setWindowIcon(QtGui.QIcon('roskazna.png'))
         self.ui.label_animation = QLabel(self)
         self.ui.label_animation.setFixedHeight(130)
@@ -242,6 +254,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.movie = QMovie('Spinner.gif')
         self.movie.setScaledSize(QSize(70, 130))
         self.ui.label_animation.setMovie(self.movie)
+        # self.someSignal.connect(self)
         self.movie.start()
 
     def btn_clicked(self):
@@ -271,6 +284,13 @@ class AboutWindows(QtWidgets.QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("О программе")
+
+class ChooseWindows(QtWidgets.QDialog):
+    def __init__(self,parent):
+        super(ChooseWindows, self).__init__(parent)
+        self.ui = Choose_Ui_Dialog()
+        self.ui.setupUi(self)
+        self.setWindowTitle("Выберите лист")
 
 app = QtWidgets.QApplication([])
 application = MyWindow()
