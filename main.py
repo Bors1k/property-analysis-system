@@ -198,8 +198,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.setWindowIcon(QtGui.QIcon('roskazna.png'))
         self.ui.label_animation = QLabel(self)
-        self.ui.label_animation.setFixedHeight(227)
-        self.ui.label_animation.setFixedWidth(128)
+        self.ui.label_animation.setFixedHeight(130)
+        self.ui.label_animation.setFixedWidth(70)
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
                                      int(self.height() * 0.5) - int(self.ui.label_animation.height() * 0.5))
         self.ui.pushButton_2.clicked.connect(self.btn_clicked)
@@ -235,7 +235,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.my_thread.start()
         # self.movie = QMovie('Ajax-loader.gif')
         self.movie = QMovie('Spinner.gif')
-        self.movie.setScaledSize(QSize(128, 227))
+        self.movie.setScaledSize(QSize(70, 130))
         self.ui.label_animation.setMovie(self.movie)
         self.movie.start()
 
@@ -246,6 +246,7 @@ class MyWindow(QtWidgets.QMainWindow):
     def save_btn_clicked(self):
         file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
         self.wb.save(file_save)
+        self.ui.statusbar.showMessage('Таблица сохраена')
 
 
 app = QtWidgets.QApplication([])
