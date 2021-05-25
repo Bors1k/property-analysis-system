@@ -1,4 +1,5 @@
 from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtCore
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QFileDialog, QLabel, QTableWidgetItem, QAbstractItemView
 import openpyxl
@@ -10,6 +11,7 @@ from openpyxl.styles import Font, Alignment
 from openpyxl.utils.exceptions import InvalidFileException
 
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
+from AboutForm import Ui_Dialog
 import sys
 import os
 
@@ -187,8 +189,8 @@ class MyThread(QThread):
         self.my_window.ui.statusbar.showMessage('Таблица сконвертирована')
         self.my_window.ui.pushButton_2.setEnabled(True)
         self.my_window.ui.pushButton_3.setEnabled(True)
-        self.my_window.movie.stop()
         self.my_window.ui.label_animation.setMovie(None)
+        self.my_window.movie.stop()
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -196,7 +198,7 @@ class MyWindow(QtWidgets.QMainWindow):
         super(MyWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
+        self.aboutForm = None
         self.setWindowIcon(QtGui.QIcon('roskazna.png'))
         self.ui.label_animation = QLabel(self)
         self.ui.label_animation.setFixedHeight(130)
@@ -205,6 +207,7 @@ class MyWindow(QtWidgets.QMainWindow):
                                      int(self.height() * 0.5) - int(self.ui.label_animation.height() * 0.5))
         self.ui.pushButton_2.clicked.connect(self.btn_clicked)
         self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
+        self.ui.menu.actions()[0].triggered.connect(self.OpenAbout)
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
         stylesheet = "::section{background-color:rgb(252, 246, 5);}"
@@ -254,9 +257,23 @@ class MyWindow(QtWidgets.QMainWindow):
             self.wb.save(file_save)
             self.ui.statusbar.showMessage('Таблица сохраена')
 
+    def OpenAbout(self):
+        print("triggered")
+        if(self.aboutForm!=None):
+            self.aboutForm.close()
+        self.aboutForm = AboutWindows(self)
+        self.aboutForm.show()
+
+class AboutWindows(QtWidgets.QDialog):
+    def __init__(self,parent):
+        super(AboutWindows, self).__init__(parent)
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
 
 app = QtWidgets.QApplication([])
 application = MyWindow()
+# aboutForm = AboutWindows()
+# aboutForm.show()
 application.setWindowTitle("Конвертер ведомости учета имущества")
 application.show()
 
