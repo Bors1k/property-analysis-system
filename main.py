@@ -7,6 +7,7 @@ import re
 from PyQt5.QtCore import QSize, QThread
 
 from openpyxl.styles import Font, Alignment
+from openpyxl.utils.exceptions import InvalidFileException
 
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
 import sys
@@ -241,12 +242,17 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def btn_clicked(self):
         self.filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
-        self.new_thread()
+        if str(self.filename) in "('', '')":
+            self.ui.statusbar.showMessage('Файл не выбран')
+        else:
+            self.new_thread()
+
 
     def save_btn_clicked(self):
         file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
-        self.wb.save(file_save)
-        self.ui.statusbar.showMessage('Таблица сохраена')
+        if str(file_save) != "":
+            self.wb.save(file_save)
+            self.ui.statusbar.showMessage('Таблица сохраена')
 
 
 app = QtWidgets.QApplication([])
