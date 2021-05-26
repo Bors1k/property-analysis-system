@@ -1,18 +1,17 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5 import QtCore
 from PyQt5.QtGui import QMovie
-from PyQt5.QtWidgets import QFileDialog, QLabel, QMainWindow, QTableWidgetItem, QAbstractItemView
+from PyQt5.QtWidgets import QFileDialog, QLabel, QMainWindow, QTableWidgetItem, QAbstractItemView, QMessageBox
 import openpyxl
 from openpyxl import Workbook
 import re
-from PyQt5.QtCore import QSize, QThread, pyqtSignal 
+from PyQt5.QtCore import QSize, QThread, pyqtSignal
 
 from openpyxl.styles import Font, Alignment
 from openpyxl.utils.exceptions import InvalidFileException
 
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
 from AboutForm import Ui_Dialog
-# from ChooseForm import Choose_Ui_Dialog
 
 import sys
 import os
@@ -31,16 +30,18 @@ class MyThread(QThread):
         wb = openpyxl.load_workbook(self.my_window.filename[0])
         sheets = wb.sheetnames
 
-        if sheets.count==1:
-            sheet = sheets[0]
-        else:
-            # self.my_window.startChooseForm
-            # self.my_window.chooseForm = ChooseWindows()
-            # self.my_window.chooseForm.show()
-            sheet = sheets[2]
+        print(len(sheets))
+        try:
+            if len(sheets)==1:
+                sheet = sheets[0]
+            else:
+                sheet = sheets[2]
+        except Exception as ex:
+            messagebox = QMessageBox(parent=self,text='Ошибка',detailedText=str(ex))
+            messagebox.setWindowTitle('Внимание!')
+            messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
+            messagebox.show()
 
-
-        # sheet = sheets[2]
         name_sheet = wb[sheet]
         n = 1
         k = 1
@@ -122,7 +123,7 @@ class MyThread(QThread):
             ws['H' + str(k)].font = Font(size="8", name='Arial')
             ws['H' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
             ws['H' + str(k)].number_format = '0.0'
-            
+
             for key in lifetime:
                 if key.lower() in str(cell.value).lower():
                     ws['G' + str(k)] = lifetime[key]
@@ -289,9 +290,20 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def save_btn_clicked(self):
         file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
-        if str(file_save) != "":
-            self.wb.save(file_save)
-            self.ui.statusbar.showMessage('Таблица сохранена')
+        try:
+            if str(file_save) != "":
+                self.wb.save(file_save)
+                self.ui.statusbar.showMessage('Таблица сохранена')
+        except PermissionError as err:
+            messagebox = QMessageBox(parent=self,text='Ошибка доступа. Необходимо закрыть файл',detailedText=str(err))
+            messagebox.setWindowTitle('Внимание!')
+            messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
+            messagebox.show()
+        except Exception as ex:
+            messagebox = QMessageBox(parent=self,text='Ошибка',detailedText=str(ex))
+            messagebox.setWindowTitle('Внимание!')
+            messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
+            messagebox.show()
 
     def OpenAbout(self):
         print("triggered")
@@ -306,13 +318,6 @@ class AboutWindows(QtWidgets.QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("О программе")
-
-# class ChooseWindows(QtWidgets.QDialog):
-#     def __init__(self):
-#         super(ChooseWindows, self).__init__()
-#         self.ui = Choose_Ui_Dialog()
-#         self.ui.setupUi(self)
-#         self.setWindowTitle("Выберите лист")
 
 app = QtWidgets.QApplication([])
 application = MyWindow()
