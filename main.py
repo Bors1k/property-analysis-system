@@ -12,10 +12,12 @@ from openpyxl.utils.exceptions import InvalidFileException
 
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
 from AboutForm import Ui_Dialog
-from ChooseForm import Choose_Ui_Dialog
+# from ChooseForm import Choose_Ui_Dialog
+
 import sys
 import os
 
+from dicts import lifetime
 
 class MyThread(QThread):
     def __init__(self, my_window, parent=None):
@@ -32,13 +34,13 @@ class MyThread(QThread):
         if sheets.count==1:
             sheet = sheets[0]
         else:
-            # self.my_window.startChooseForm()
+            # self.my_window.startChooseForm
             # self.my_window.chooseForm = ChooseWindows()
             # self.my_window.chooseForm.show()
             sheet = sheets[2]
 
 
-        sheet = sheets[2]
+        # sheet = sheets[2]
         name_sheet = wb[sheet]
         n = 1
         k = 1
@@ -120,6 +122,15 @@ class MyThread(QThread):
             ws['H' + str(k)].font = Font(size="8", name='Arial')
             ws['H' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
             ws['H' + str(k)].number_format = '0.0'
+            
+            for key in lifetime:
+                if key.lower() in str(cell.value).lower():
+                    ws['G' + str(k)] = lifetime[key]
+
+            ws['G' + str(k)].font = Font(size="8", name='Arial')
+            ws['G' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+            ws['G' + str(k)].number_format = '0'
+            
             k = k + 1
             n = n + 1
 
@@ -149,6 +160,9 @@ class MyThread(QThread):
         ws['F1'] = 'Срок использования'
         ws['F1'].font = Font(bold=True, size="10", name='Arial')
         ws['F1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['G1'] = 'Срок по нормам, лет'
+        ws['G1'].font = Font(bold=True, size="10", name='Arial')
+        ws['G1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
         ws['H1'] = 'Срок превышен, лет'
         ws['H1'].font = Font(bold=True, size="10", name='Arial')
         ws['H1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
@@ -203,12 +217,12 @@ class MyThread(QThread):
         self.my_window.ui.label_animation.setMovie(None)
         self.my_window.movie.stop()
 
-class ChooseListThread(QThread):
-    def __init__(self, parent=None):
-        super(ChooseListThread, self).__init__()
-    def run(self):
-        chooseForm = ChooseWindows()
-        chooseForm.show()
+# class ChooseListThread(QThread):
+#     def __init__(self, parent=None):
+#         super(ChooseListThread, self).__init__()
+#     def run(self):
+#         chooseForm = ChooseWindows()
+#         chooseForm.show()
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -216,7 +230,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.aboutForm = None
-        self.chooseForm = None
+        # self.chooseForm = None
         self.setWindowIcon(QtGui.QIcon('roskazna.png'))
         self.ui.label_animation = QLabel(self)
         self.ui.label_animation.setFixedHeight(130)
@@ -248,7 +262,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.label.setStyleSheet('.QLabel{border-image: url(roskazna.png);}')
 
         self.my_thread = MyThread(my_window=self)
-        self.chooseThread = ChooseListThread()
+        # self.chooseThread = ChooseListThread()
 
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
@@ -262,8 +276,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.label_animation.setMovie(self.movie)
         self.movie.start()
 
-    def startChooseForm(self):
-        self.chooseThread.start()
+    # def startChooseForm(self):
+    #     self.chooseThread.start()
 
     def btn_clicked(self):
         self.filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
@@ -293,12 +307,12 @@ class AboutWindows(QtWidgets.QDialog):
         self.ui.setupUi(self)
         self.setWindowTitle("О программе")
 
-class ChooseWindows(QtWidgets.QDialog):
-    def __init__(self):
-        super(ChooseWindows, self).__init__()
-        self.ui = Choose_Ui_Dialog()
-        self.ui.setupUi(self)
-        self.setWindowTitle("Выберите лист")
+# class ChooseWindows(QtWidgets.QDialog):
+#     def __init__(self):
+#         super(ChooseWindows, self).__init__()
+#         self.ui = Choose_Ui_Dialog()
+#         self.ui.setupUi(self)
+#         self.setWindowTitle("Выберите лист")
 
 app = QtWidgets.QApplication([])
 application = MyWindow()
