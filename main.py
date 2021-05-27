@@ -15,6 +15,7 @@ from AboutForm import Ui_Dialog
 
 import sys
 import os
+import images_qr
 
 from dicts import lifetime
 
@@ -225,6 +226,7 @@ class MyThread(QThread):
 #         chooseForm = ChooseWindows()
 #         chooseForm.show()
 
+
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
@@ -232,7 +234,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.aboutForm = None
         # self.chooseForm = None
-        self.setWindowIcon(QtGui.QIcon('roskazna.png'))
+        self.setWindowIcon(QtGui.QIcon(':roskazna.png'))
         self.ui.label_animation = QLabel(self)
         self.ui.label_animation.setFixedHeight(130)
         self.ui.label_animation.setFixedWidth(70)
@@ -247,7 +249,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.setStyleSheet('.QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}')
         self.ui.tableWidget.horizontalHeader().setStyleSheet(stylesheet)
         self.ui.tableWidget.verticalHeader().setStyleSheet(stylesheet)
-        self.setStyleSheet('.QWidget {border-image: url(1C.png);}')
+        self.setStyleSheet('.QWidget {border-image: url(:1C.png);}')
         self.ui.tableWidget.setStyleSheet('.QTableWidget {background-color: rgba(143, 144, 146, 100);border-radius: '
                                           '8px;}')
         self.ui.pushButton_2.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
@@ -260,7 +262,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
-        self.ui.label.setStyleSheet('.QLabel{border-image: url(roskazna.png);}')
+        self.ui.label.setStyleSheet('.QLabel{border-image: url(:roskazna.png);}')
 
         self.my_thread = MyThread(my_window=self)
         # self.chooseThread = ChooseListThread()
@@ -272,7 +274,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def new_thread(self):
         self.my_thread.start()
-        self.movie = QMovie('Spinner.gif')
+        self.movie = QMovie(':Spinner.gif')
         self.movie.setScaledSize(QSize(70, 130))
         self.ui.label_animation.setMovie(self.movie)
         self.movie.start()

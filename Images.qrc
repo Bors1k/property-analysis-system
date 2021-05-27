@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/" >
+        <file>1C.png</file>
+        <file>open.png</file>
+        <file>roskazna.png</file>
+        <file>save.png</file>
+        <file>Spinner.gif</file>
+    </qresource> </RCC>
