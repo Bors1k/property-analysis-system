@@ -71,7 +71,10 @@ class Ui_MainWindow(object):
 "border:0;\n"
 "background-color: rgba(143, 144, 146, 80)\n"
 "}\n"
-".QTabBar::tab{background: transparent;}")
+".QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}\n"
+"\n"
+".QTabBar::tab{background: transparent; background-color: rgba(143, 144, 146, 80);}\n"
+".QTabBar::tab::selected{background: transparent; background-color: rgba(113, 113, 115,155);}")
         self.tabWidget.setObjectName("tabWidget")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")

@@ -251,7 +251,6 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
         stylesheet = "::section{background-color:rgb(252, 246, 5);}"
-        self.ui.tableWidget.setStyleSheet('.QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}')
         self.ui.tableWidget.horizontalHeader().setStyleSheet(stylesheet)
         self.ui.tableWidget.verticalHeader().setStyleSheet(stylesheet)
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')

@@ -17,14 +17,19 @@ class Choose_Dialog(object):
         Dialog.resize(323, 91)
         Dialog.setMinimumSize(QtCore.QSize(323, 91))
         Dialog.setMaximumSize(QtCore.QSize(323, 91))
-        Dialog.setStyleSheet(".QPushButton{background-color: #444444;color: white;}\n"
-".QTableWidget {background-color: rgba(143, 144, 146, 100);border-radius: \'                                    \'8px;}\n"
-".QWidget {background-color: #444444;;}")
+        Dialog.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/roskazna.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
+        Dialog.setStyleSheet("#Dialog {background-color: rgba(254,214,0,200)}\n"
+".QPushButton {background-color: rgba(143, 144, 146, 200)}\n"
+".QPushButton:hover{ background-color: rgba(143, 144, 146, 250)}")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.comboBox = QtWidgets.QComboBox(Dialog)
+        self.comboBox.setStyleSheet("background: transparent; background-color: rgba(68,68,68,200); color: white;")
         self.comboBox.setObjectName("comboBox")
         self.verticalLayout.addWidget(self.comboBox)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
@@ -42,3 +47,4 @@ class Choose_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+import images_qr
