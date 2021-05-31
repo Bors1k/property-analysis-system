@@ -128,8 +128,9 @@
          <string notr="true">.QTabWidget::pane{
 background: transparent;
 border:0;
-background-color: rgba(143, 144, 146, 80)
+background-color: rgba(113, 113, 115,155)
 }
+
 .QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}
 
 .QTabBar::tab{background: transparent; background-color: rgba(143, 144, 146, 80);}
