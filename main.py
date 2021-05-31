@@ -46,16 +46,14 @@ class MyThread(QThread):
         wb = openpyxl.load_workbook(self.my_window.filename[0])
         sheets = wb.sheetnames
 
-        print(len(sheets))
-        self.pause = True
-        self.showMessageBox.emit(sheets)
-        while self.pause: self.sleep(1)
-
         try:
             if len(sheets)==1:
                 sheet = sheets[0]
             else:
-                sheet = sheets[2]
+                self.pause = True
+                self.showMessageBox.emit(sheets)
+                while self.pause: self.sleep(1)
+                # sheet = sheets[2]
         except Exception as ex:
 
             messagebox = QMessageBox(parent=self,text='Ошибка',detailedText=str(ex))
@@ -295,8 +293,6 @@ class MyWindow(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot(list)
     def msgBox(self,list):
-        for obj in list:
-            print(obj)
         cDialog = ChooseWindow(list)
         if cDialog.exec_() == cDialog.ui.buttonBox.Ok:
             self.my_thread.pause = False
@@ -355,14 +351,16 @@ class ChooseWindow(QtWidgets.QDialog):
     def __init__(self,list):
         super(ChooseWindow, self).__init__()
         self.list = list
-        print(self.list)
         self.ui = Choose_Dialog()
         self.ui.setupUi(self)
-        self.ui.tableWidget.setColumnCount = 1
+
+        self.ui.tableWidget.setColumnCount(1)
+        self.ui.tableWidget.setRowCount(len(self.list))
         self.ui.tableWidget.setHorizontalHeaderLabels(['Имя листа'])
         self.setWindowTitle("Выбор листа для анализа")
-        i = 1
+        i = 0
         for value in self.list:
+            print(value)
             self.ui.tableWidget.setItem(i,0,QTableWidgetItem(str(value)))
             i = i + 1
 
