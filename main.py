@@ -1,17 +1,18 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5 import QtCore
 from PyQt5.QtGui import QMovie
-from PyQt5.QtWidgets import QFileDialog, QLabel, QMainWindow, QTableWidgetItem, QAbstractItemView, QMessageBox
+from PyQt5.QtWidgets import QCheckBox, QFileDialog, QLabel, QMainWindow, QTableWidgetItem, QAbstractItemView, QMessageBox, QWidget
 import openpyxl
 from openpyxl import Workbook
 import re
-from PyQt5.QtCore import QSize, QThread, pyqtSignal
+from PyQt5.QtCore import QMetaObject, QSize, QThread, pyqtSignal
 
 from openpyxl.styles import Font, Alignment
 from openpyxl.utils.exceptions import InvalidFileException
 
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
 from AboutForm import Ui_Dialog
+from ChooseForm import Choose_Dialog
 
 import sys
 import os
@@ -19,12 +20,26 @@ import images_qr
 
 from dicts import lifetime
 
+
+
 class MyThread(QThread):
+    showMessageBox = QtCore.pyqtSignal(list)
+
     def __init__(self, my_window, parent=None):
         super(MyThread, self).__init__()
         self.my_window = my_window
+        self.pause = False
 
-    def run(self):
+
+    def run(self):  
+        # self.my_window
+        
+        # self.metaObject().invokeMethod(self.my_window,'msgBox', QtCore.Qt.BlockingQueuedConnection,QtCore.Q_ARG(MyWindow, self.my_window))
+        # cb = QCheckBox("OK")
+        # mb = QMessageBox(self.my_window)
+        # mb.setCheckBox(cb)
+        # mb.show()
+
         self.my_window.ui.statusbar.showMessage('Анализ и сопоставление данных исходной таблицы')
         self.my_window.ui.pushButton_2.setEnabled(False)
         self.my_window.ui.pushButton_3.setEnabled(False)
@@ -32,12 +47,17 @@ class MyThread(QThread):
         sheets = wb.sheetnames
 
         print(len(sheets))
+        self.pause = True
+        self.showMessageBox.emit(sheets)
+        while self.pause: self.sleep(1)
+
         try:
             if len(sheets)==1:
                 sheet = sheets[0]
             else:
                 sheet = sheets[2]
         except Exception as ex:
+
             messagebox = QMessageBox(parent=self,text='Ошибка',detailedText=str(ex))
             messagebox.setWindowTitle('Внимание!')
             messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
@@ -226,8 +246,8 @@ class MyThread(QThread):
 #         chooseForm = ChooseWindows()
 #         chooseForm.show()
 
-
 class MyWindow(QtWidgets.QMainWindow):
+    
     def __init__(self):
         super(MyWindow, self).__init__()
         self.ui = Ui_MainWindow()
@@ -265,12 +285,21 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.label.setStyleSheet('.QLabel{border-image: url(:roskazna.png);}')
 
         self.my_thread = MyThread(my_window=self)
+        self.my_thread.showMessageBox.connect(self.msgBox)
         # self.chooseThread = ChooseListThread()
-
+   
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
                                      int(self.height() * 0.5) - int(self.ui.label_animation.height() * 0.5))
         QtWidgets.QMainWindow.resizeEvent(self, event)
+
+    @QtCore.pyqtSlot(list)
+    def msgBox(self,list):
+        for obj in list:
+            print(obj)
+        cDialog = ChooseWindow(list)
+        if cDialog.exec_() == cDialog.ui.buttonBox.Ok:
+            self.my_thread.pause = False
 
     def new_thread(self):
         self.my_thread.start()
@@ -314,12 +343,28 @@ class MyWindow(QtWidgets.QMainWindow):
         self.aboutForm = AboutWindows()
         self.aboutForm.show()
 
+
 class AboutWindows(QtWidgets.QDialog):
     def __init__(self):
         super(AboutWindows, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("О программе")
+
+class ChooseWindow(QtWidgets.QDialog):
+    def __init__(self,list):
+        super(ChooseWindow, self).__init__()
+        self.list = list
+        print(self.list)
+        self.ui = Choose_Dialog()
+        self.ui.setupUi(self)
+        self.ui.tableWidget.setColumnCount = 1
+        self.ui.tableWidget.setHorizontalHeaderLabels(['Имя листа'])
+        self.setWindowTitle("Выбор листа для анализа")
+        i = 1
+        for value in self.list:
+            self.ui.tableWidget.setItem(i,0,QTableWidgetItem(str(value)))
+            i = i + 1
 
 app = QtWidgets.QApplication([])
 application = MyWindow()
