@@ -5,4 +5,7 @@
         <file>roskazna.png</file>
         <file>save.png</file>
         <file>Spinner.gif</file>
+        <file>plus.png</file>
+        <file>minus.png</file>
+        <file>sbros.png</file>
     </qresource> </RCC>

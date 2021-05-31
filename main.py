@@ -24,6 +24,7 @@ from dicts import lifetime
 
 class MyThread(QThread):
     showMessageBox = QtCore.pyqtSignal(list)
+    fihishThread = QtCore.pyqtSignal(str)
 
     def __init__(self, my_window, parent=None):
         super(MyThread, self).__init__()
@@ -230,6 +231,7 @@ class MyThread(QThread):
         self.my_window.ui.pushButton_3.setEnabled(True)
         self.my_window.ui.label_animation.setMovie(None)
         self.my_window.movie.stop()
+        self.fihishThread.emit("ended")
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -256,7 +258,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
 
-   
+
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
                                      int(self.height() * 0.5) - int(self.ui.label_animation.height() * 0.5))
@@ -280,11 +282,16 @@ class MyWindow(QtWidgets.QMainWindow):
     def new_thread(self):
         self.my_thread = MyThread(my_window=self)
         self.my_thread.showMessageBox.connect(self.msgBox)
+        self.my_thread.fihishThread.connect((self.lblDis))
         self.my_thread.start()
         self.movie = QMovie(':Spinner.gif')
         self.movie.setScaledSize(QSize(70, 130))
         self.ui.label_animation.setMovie(self.movie)
         self.movie.start()
+
+    @QtCore.pyqtSlot(str)
+    def lblDis(self,str):
+        self.ui.label_animation.setEnabled(False)
 
     def btn_clicked(self):
         self.filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
