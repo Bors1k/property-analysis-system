@@ -45,7 +45,7 @@ color: white;</string>
    <item>
     <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>Конвертер ведомости учета имущества - Version: 1.0</string>
+      <string>Конвертер ведомости учета имущества - Version: 1.1</string>
      </property>
     </widget>
    </item>
