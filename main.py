@@ -32,13 +32,6 @@ class MyThread(QThread):
 
 
     def run(self):  
-        # self.my_window
-        
-        # self.metaObject().invokeMethod(self.my_window,'msgBox', QtCore.Qt.BlockingQueuedConnection,QtCore.Q_ARG(MyWindow, self.my_window))
-        # cb = QCheckBox("OK")
-        # mb = QMessageBox(self.my_window)
-        # mb.setCheckBox(cb)
-        # mb.show()
 
         self.my_window.ui.statusbar.showMessage('Анализ и сопоставление данных исходной таблицы')
         self.my_window.ui.pushButton_2.setEnabled(False)
@@ -53,6 +46,7 @@ class MyThread(QThread):
                 self.pause = True
                 self.showMessageBox.emit(sheets)
                 while self.pause: self.sleep(1)
+                sheet = self.my_window.ChoosedSheet
                 # sheet = sheets[2]
         except Exception as ex:
 
@@ -237,12 +231,6 @@ class MyThread(QThread):
         self.my_window.ui.label_animation.setMovie(None)
         self.my_window.movie.stop()
 
-# class ChooseListThread(QThread):
-#     def __init__(self, parent=None):
-#         super(ChooseListThread, self).__init__()
-#     def run(self):
-#         chooseForm = ChooseWindows()
-#         chooseForm.show()
 
 class MyWindow(QtWidgets.QMainWindow):
     
@@ -251,7 +239,6 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.aboutForm = None
-        # self.chooseForm = None
         self.setWindowIcon(QtGui.QIcon(':roskazna.png'))
         self.ui.label_animation = QLabel(self)
         self.ui.label_animation.setFixedHeight(130)
@@ -282,8 +269,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
         self.ui.label.setStyleSheet('.QLabel{border-image: url(:roskazna.png);}')
 
-        self.my_thread = MyThread(my_window=self)
-        self.my_thread.showMessageBox.connect(self.msgBox)
+        # self.my_thread = MyThread(my_window=self)
+        # self.my_thread.showMessageBox.connect(self.msgBox)
         # self.chooseThread = ChooseListThread()
    
     def resizeEvent(self, event):
@@ -294,18 +281,26 @@ class MyWindow(QtWidgets.QMainWindow):
     @QtCore.pyqtSlot(list)
     def msgBox(self,list):
         cDialog = ChooseWindow(list)
-        if cDialog.exec_() == cDialog.ui.buttonBox.Ok:
+        if cDialog.exec():
+            self.ChoosedSheet = cDialog.ChoosedSheet
             self.my_thread.pause = False
+        else: 
+            self.ui.statusbar.showMessage('Анализ отменен')
+            self.my_thread.quit()
+
+            self.ui.pushButton_2.setEnabled(True)
+            self.ui.pushButton_3.setEnabled(True)
+            self.ui.label_animation.setMovie(None)
+            self.movie.stop()
 
     def new_thread(self):
+        self.my_thread = MyThread(my_window=self)
+        self.my_thread.showMessageBox.connect(self.msgBox)
         self.my_thread.start()
         self.movie = QMovie(':Spinner.gif')
         self.movie.setScaledSize(QSize(70, 130))
         self.ui.label_animation.setMovie(self.movie)
         self.movie.start()
-
-    # def startChooseForm(self):
-    #     self.chooseThread.start()
 
     def btn_clicked(self):
         self.filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
@@ -353,16 +348,20 @@ class ChooseWindow(QtWidgets.QDialog):
         self.list = list
         self.ui = Choose_Dialog()
         self.ui.setupUi(self)
-
-        self.ui.tableWidget.setColumnCount(1)
-        self.ui.tableWidget.setRowCount(len(self.list))
-        self.ui.tableWidget.setHorizontalHeaderLabels(['Имя листа'])
+        self.ui.buttonBox.accepted.connect(self.ChooseList)
+        self.ui.buttonBox.rejected.connect(self.RejectChooseList)
         self.setWindowTitle("Выбор листа для анализа")
-        i = 0
+
         for value in self.list:
-            print(value)
-            self.ui.tableWidget.setItem(i,0,QTableWidgetItem(str(value)))
-            i = i + 1
+            self.ui.comboBox.addItem(str(value))
+
+    def ChooseList(self):
+        self.ChoosedSheet = self.ui.comboBox.currentText()
+        print(self.ChoosedSheet)
+
+    def RejectChooseList(self):
+        self.ChoosedSheet = 'None'    
+
 
 app = QtWidgets.QApplication([])
 application = MyWindow()

@@ -14,26 +14,25 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Choose_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 300)
-#         Dialog.setStyleSheet(".QPushButton{background-color: #444444;color: white;}\n"
-# ".QTableWidget {background-color: rgba(143, 144, 146, 100);border-radius: \'                                    \'8px;}\n"
-# ".QWidget {background-color: #444444;;}")
-        self.widget = QtWidgets.QWidget(Dialog)
-        self.widget.setGeometry(QtCore.QRect(10, 10, 381, 281))
-        self.widget.setObjectName("widget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        Dialog.resize(323, 91)
+        Dialog.setMinimumSize(QtCore.QSize(323, 91))
+        Dialog.setMaximumSize(QtCore.QSize(323, 91))
+        Dialog.setStyleSheet(".QPushButton{background-color: #444444;color: white;}\n"
+".QTableWidget {background-color: rgba(143, 144, 146, 100);border-radius: \'                                    \'8px;}\n"
+".QWidget {background-color: #444444;;}")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(Dialog)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.tableWidget = QtWidgets.QTableWidget(self.widget)
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(0)
-        self.tableWidget.setRowCount(0)
-        self.verticalLayout.addWidget(self.tableWidget)
-        self.buttonBox = QtWidgets.QDialogButtonBox(self.widget)
+        self.comboBox = QtWidgets.QComboBox(Dialog)
+        self.comboBox.setObjectName("comboBox")
+        self.verticalLayout.addWidget(self.comboBox)
+        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout.addWidget(self.buttonBox)
+        self.verticalLayout_2.addLayout(self.verticalLayout)
 
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)
