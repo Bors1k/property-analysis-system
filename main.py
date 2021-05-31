@@ -254,24 +254,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.setStyleSheet('.QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}')
         self.ui.tableWidget.horizontalHeader().setStyleSheet(stylesheet)
         self.ui.tableWidget.verticalHeader().setStyleSheet(stylesheet)
-        self.setStyleSheet('.QWidget {border-image: url(:1C.png);}')
-        self.ui.tableWidget.setStyleSheet('.QTableWidget {background-color: rgba(143, 144, 146, 100);border-radius: '
-                                          '8px;}')
-        self.ui.pushButton_2.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
-                                           '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
-        self.ui.pushButton_3.setStyleSheet('.QPushButton{background-color: rgba(143, 144, 146, 80);} '
-                                           '.QPushButton:hover{background-color: rgba(143, 144, 146, 130);}')
-        self.ui.menubar.setStyleSheet('.QMenuBar{background-color: #444444;color: white;} .QMenuBar:item:selected{'
-                                      'background: #444444;color: #fcf605;} .QMenu {background-color: #444444;color: white;} .QMenu:item:selected{'
-                                      'background: #444444;color: #fcf605;} ' ) 
-        self.ui.statusbar.setStyleSheet('.QStatusBar{background-color: #444444;color: white;}')
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
-        self.ui.label.setStyleSheet('.QLabel{border-image: url(:roskazna.png);}')
 
-        # self.my_thread = MyThread(my_window=self)
-        # self.my_thread.showMessageBox.connect(self.msgBox)
-        # self.chooseThread = ChooseListThread()
    
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
