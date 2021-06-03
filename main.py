@@ -256,6 +256,12 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.verticalHeader().setStyleSheet(stylesheet)
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
+        self.ui.tableWidget_2.verticalScrollBar().setStyleSheet('background: #444444')
+        self.ui.tableWidget_2.horizontalScrollBar().setStyleSheet('background: #444444')
+        self.ui.tableWidget_2.horizontalHeader().setStyleSheet(stylesheet)
+        self.ui.tableWidget_2.verticalHeader().setStyleSheet(stylesheet)
+        self.ui.tableWidget_2.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.ui.tableWidget_2.horizontalHeader().setStretchLastSection(True)
         self.ui.pushButton.clicked.connect(self.openChooseFilter)
 
 
@@ -354,8 +360,6 @@ class ChooseFilter(QtWidgets.QDialog):
         print(self.x)
 
     def set_header_table2(self):
-        # self.my_window.ui.tableWidget_2.setColumnCount(3)
-        # self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(['1', '2', '3'])
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.x))
         self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(self.x)
 
