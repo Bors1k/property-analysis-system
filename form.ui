@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>777</width>
-    <height>580</height>
+    <width>986</width>
+    <height>713</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -121,7 +121,10 @@
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1">
+      <property name="spacing">
+       <number>2</number>
+      </property>
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="styleSheet">
@@ -137,7 +140,7 @@ background-color: rgba(113, 113, 115,155)
 .QTabBar::tab::selected{background: transparent; background-color: rgba(113, 113, 115,155);}</string>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -158,102 +161,144 @@ border-radius:8px;}</string>
          <attribute name="title">
           <string>Аналитика по отделам</string>
          </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,12">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
-             <widget class="QPushButton" name="pushButton">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">.QPushButton {background-color: rgba(255, 210, 3, 130)}
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QPushButton" name="pushButton_6">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">.QPushButton {background-color: rgba(255, 210, 3, 130)}
 .QPushButton:hover{ background-color: rgba(255, 210, 3, 50)}</string>
-              </property>
-              <property name="text">
-               <string>Добавить позицию для анализа</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>plus.png</normaloff>plus.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-             </widget>
+                </property>
+                <property name="text">
+                 <string>Добавить отделы для анализа</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>plus.png</normaloff>plus.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_4">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">.QPushButton {background-color: rgba(255, 210, 3, 130)}
+.QPushButton:hover{ background-color: rgba(255, 210, 3, 50)}</string>
+                </property>
+                <property name="text">
+                 <string>Сброс отделов</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>sbros.png</normaloff>sbros.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">.QPushButton {background-color: rgba(255, 210, 3, 130)}
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QPushButton" name="pushButton">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">.QPushButton {background-color: rgba(255, 210, 3, 130)}
 .QPushButton:hover{ background-color: rgba(255, 210, 3, 50)}</string>
-              </property>
-              <property name="text">
-               <string>Удалить последнюю позицию</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>minus.png</normaloff>minus.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButton_5">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">.QPushButton {background-color: rgba(255, 210, 3, 130)}
+                </property>
+                <property name="text">
+                 <string>Добавить позиции для анализа</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>plus.png</normaloff>plus.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_5">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">.QPushButton {background-color: rgba(255, 210, 3, 130)}
 .QPushButton:hover{ background-color: rgba(255, 210, 3, 50)}</string>
-              </property>
-              <property name="text">
-               <string>Сброс</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>sbros.png</normaloff>sbros.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
+                </property>
+                <property name="text">
+                 <string>Сброс позиций</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>sbros.png</normaloff>sbros.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
@@ -278,7 +323,7 @@ border-radius:8px;}</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>777</width>
+     <width>986</width>
      <height>21</height>
     </rect>
    </property>

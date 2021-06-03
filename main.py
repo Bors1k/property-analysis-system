@@ -13,13 +13,13 @@ from openpyxl.utils.exceptions import InvalidFileException
 from form import Ui_MainWindow  # импорт нашего сгенерированного файла
 from AboutForm import Ui_Dialog
 from ChooseForm import Choose_Dialog
+from ChooseFilter import Ui_Dialog_ChooseFilter
 
 import sys
 import os
 import images_qr
 
-from dicts import lifetime
-
+from dicts import lifetime, choose_position
 
 
 class MyThread(QThread):
@@ -31,9 +31,7 @@ class MyThread(QThread):
         self.my_window = my_window
         self.pause = False
 
-
-    def run(self):  
-
+    def run(self):
         self.my_window.ui.statusbar.showMessage('Анализ и сопоставление данных исходной таблицы')
         self.my_window.ui.pushButton_2.setEnabled(False)
         self.my_window.ui.pushButton_3.setEnabled(False)
@@ -51,7 +49,7 @@ class MyThread(QThread):
                 # sheet = sheets[2]
         except Exception as ex:
 
-            messagebox = QMessageBox(parent=self,text='Ошибка',detailedText=str(ex))
+            messagebox = QMessageBox(parent=self, text='Ошибка', detailedText=str(ex))
             messagebox.setWindowTitle('Внимание!')
             messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
             messagebox.show()
@@ -238,6 +236,7 @@ class MyWindow(QtWidgets.QMainWindow):
     
     def __init__(self):
         super(MyWindow, self).__init__()
+        self.chooseFilter = ChooseFilter(my_window=self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.aboutForm = None
@@ -257,6 +256,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.verticalHeader().setStyleSheet(stylesheet)
         self.ui.tableWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.tableWidget.horizontalScrollBar().setStyleSheet('background: #444444')
+        self.ui.pushButton.clicked.connect(self.openChooseFilter)
 
 
     def resizeEvent(self, event):
@@ -265,7 +265,7 @@ class MyWindow(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.resizeEvent(self, event)
 
     @QtCore.pyqtSlot(list)
-    def msgBox(self,list):
+    def msgBox(self, list):
         cDialog = ChooseWindow(list)
         if cDialog.exec():
             self.ChoosedSheet = cDialog.ChoosedSheet
@@ -300,7 +300,6 @@ class MyWindow(QtWidgets.QMainWindow):
         else:
             self.new_thread()
 
-
     def save_btn_clicked(self):
         file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
         try:
@@ -320,21 +319,57 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def OpenAbout(self):
         print("triggered")
-        if(self.aboutForm!=None):
+        if(self.aboutForm != None):
             self.aboutForm.close()
         self.aboutForm = AboutWindows()
         self.aboutForm.show()
 
+    def openChooseFilter(self):
+        self.chooseFilter.show()
+
+
+class ChooseFilter(QtWidgets.QDialog):
+
+    def __init__(self, my_window):
+        super(ChooseFilter, self).__init__()
+        self.my_window = my_window
+        self.ui = Ui_Dialog_ChooseFilter()
+        self.ui.setupUi(self)
+        spisok =[]
+        for key, value in choose_position.items():
+            spisok.append(value)
+        self.ui.listWidget.addItems(spisok)
+        print(spisok)
+        self.ui.listWidget.setSelectionMode(
+            QtWidgets.QAbstractItemView.ExtendedSelection
+        )
+        self.ui.listWidget.itemClicked.connect(self.printItemText)
+        self.ui.pushButton.clicked.connect(self.set_header_table2)
+
+    def printItemText(self):
+        items = self.ui.listWidget.selectedItems()
+        self.x = []
+        for i in range(len(items)):
+            self.x.append(str(self.ui.listWidget.selectedItems()[i].text()))
+        print(self.x)
+
+    def set_header_table2(self):
+        # self.my_window.ui.tableWidget_2.setColumnCount(3)
+        # self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(['1', '2', '3'])
+        self.my_window.ui.tableWidget_2.setColumnCount(len(self.x))
+        self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(self.x)
+
 
 class AboutWindows(QtWidgets.QDialog):
+
     def __init__(self):
         super(AboutWindows, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.setWindowTitle("О программе")
+
 
 class ChooseWindow(QtWidgets.QDialog):
-    def __init__(self,list):
+    def __init__(self, list):
         super(ChooseWindow, self).__init__()
         self.list = list
         self.ui = Choose_Dialog()
