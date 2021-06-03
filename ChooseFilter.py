@@ -12,22 +12,22 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Dialog_ChooseFilter(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(417, 250)
-        self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
+    def setupUi(self, Dialog_ChooseFilter):
+        Dialog_ChooseFilter.setObjectName("Dialog_ChooseFilter")
+        Dialog_ChooseFilter.resize(417, 250)
+        self.verticalLayout = QtWidgets.QVBoxLayout(Dialog_ChooseFilter)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.listWidget = QtWidgets.QListWidget(Dialog)
+        self.listWidget = QtWidgets.QListWidget(Dialog_ChooseFilter)
         self.listWidget.setObjectName("listWidget")
         self.verticalLayout.addWidget(self.listWidget)
-        self.pushButton = QtWidgets.QPushButton(Dialog)
+        self.pushButton = QtWidgets.QPushButton(Dialog_ChooseFilter)
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout.addWidget(self.pushButton)
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(Dialog_ChooseFilter)
+        QtCore.QMetaObject.connectSlotsByName(Dialog_ChooseFilter)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, Dialog_ChooseFilter):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Выбор объектов для анализа"))
-        self.pushButton.setText(_translate("Dialog", "Добавить"))
+        Dialog_ChooseFilter.setWindowTitle(_translate("Dialog_ChooseFilter", "Выбор объектов для анализа"))
+        self.pushButton.setText(_translate("Dialog_ChooseFilter", "Добавить"))
