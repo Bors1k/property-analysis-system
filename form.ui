@@ -140,7 +140,7 @@ background-color: rgba(113, 113, 115,155)
 .QTabBar::tab::selected{background: transparent; background-color: rgba(113, 113, 115,155);}</string>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -212,6 +212,12 @@ border-radius:8px;}</string>
                  <iconset>
                   <normaloff>sbros.png</normaloff>sbros.png</iconset>
                 </property>
+                <property name="iconSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
@@ -227,10 +233,6 @@ border-radius:8px;}</string>
                 </property>
                </spacer>
               </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
                <widget class="QPushButton" name="pushButton">
                 <property name="minimumSize">
@@ -284,19 +286,6 @@ border-radius:8px;}</string>
                  </size>
                 </property>
                </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </item>

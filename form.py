@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(986, 713)
+        MainWindow.resize(986, 698)
         MainWindow.setStyleSheet("#MainWindow {border-image: url(:/1C.png);}\n"
 "\n"
 ".QMenuBar{background-color: #444444;color: white;} \n"
@@ -115,13 +115,11 @@ class Ui_MainWindow(object):
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap("sbros.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_4.setIcon(icon3)
+        self.pushButton_4.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_4.setObjectName("pushButton_4")
         self.horizontalLayout_4.addWidget(self.pushButton_4)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem1)
-        self.verticalLayout_5.addLayout(self.horizontalLayout_4)
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.pushButton = QtWidgets.QPushButton(self.tab_2)
         self.pushButton.setMinimumSize(QtCore.QSize(0, 30))
         self.pushButton.setStyleSheet(".QPushButton {background-color: rgba(255, 210, 3, 130)}\n"
@@ -129,7 +127,7 @@ class Ui_MainWindow(object):
         self.pushButton.setIcon(icon2)
         self.pushButton.setIconSize(QtCore.QSize(20, 20))
         self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout_3.addWidget(self.pushButton)
+        self.horizontalLayout_4.addWidget(self.pushButton)
         self.pushButton_5 = QtWidgets.QPushButton(self.tab_2)
         self.pushButton_5.setMinimumSize(QtCore.QSize(0, 30))
         self.pushButton_5.setStyleSheet(".QPushButton {background-color: rgba(255, 210, 3, 130)}\n"
@@ -137,10 +135,8 @@ class Ui_MainWindow(object):
         self.pushButton_5.setIcon(icon3)
         self.pushButton_5.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_5.setObjectName("pushButton_5")
-        self.horizontalLayout_3.addWidget(self.pushButton_5)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem2)
-        self.verticalLayout_5.addLayout(self.horizontalLayout_3)
+        self.horizontalLayout_4.addWidget(self.pushButton_5)
+        self.verticalLayout_5.addLayout(self.horizontalLayout_4)
         self.verticalLayout_4.addLayout(self.verticalLayout_5)
         self.tableWidget_2 = QtWidgets.QTableWidget(self.tab_2)
         self.tableWidget_2.setStyleSheet(".QTableWidget {background-color: rgba(143, 144, 146, 100);\n"
@@ -170,7 +166,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
