@@ -15,12 +15,19 @@ class Ui_Dialog_ChooseFilter(object):
     def setupUi(self, Dialog_ChooseFilter):
         Dialog_ChooseFilter.setObjectName("Dialog_ChooseFilter")
         Dialog_ChooseFilter.resize(417, 250)
+        Dialog_ChooseFilter.setStyleSheet("#Dialog_ChooseFilter {background-color: rgba(254,214,0,200)}\\n\n"
+".QPushButton {background-color: rgba(143, 144, 146, 200)}\\n\n"
+".QPushButton:hover{ background-color: rgba(143, 144, 146, 250)}")
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog_ChooseFilter)
         self.verticalLayout.setObjectName("verticalLayout")
         self.listWidget = QtWidgets.QListWidget(Dialog_ChooseFilter)
+        self.listWidget.setStyleSheet(".QListWidget {background-color: rgba(143, 144, 146, 100);\n"
+"border-radius:8px;}")
         self.listWidget.setObjectName("listWidget")
         self.verticalLayout.addWidget(self.listWidget)
         self.pushButton = QtWidgets.QPushButton(Dialog_ChooseFilter)
+        self.pushButton.setStyleSheet(".QPushButton {background-color: rgba(143, 144, 146, 80)}\n"
+".QPushButton:hover{ background-color: rgba(143, 144, 146, 130)}")
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout.addWidget(self.pushButton)
 

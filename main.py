@@ -351,6 +351,8 @@ class ChooseFilter(QtWidgets.QDialog):
         )
         self.ui.listWidget.itemClicked.connect(self.printItemText)
         self.ui.pushButton.clicked.connect(self.set_header_table2)
+        self.ui.listWidget.verticalScrollBar().setStyleSheet('background: #444444')
+        self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
 
     def printItemText(self):
         items = self.ui.listWidget.selectedItems()
@@ -363,7 +365,7 @@ class ChooseFilter(QtWidgets.QDialog):
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.x))
         self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(self.x)
 
-
+    
 class AboutWindows(QtWidgets.QDialog):
 
     def __init__(self):
