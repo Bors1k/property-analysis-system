@@ -1,7 +1,8 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5 import QtCore
 from PyQt5.QtGui import QMovie
-from PyQt5.QtWidgets import QCheckBox, QFileDialog, QLabel, QMainWindow, QTableWidgetItem, QAbstractItemView, QMessageBox, QWidget
+from PyQt5.QtWidgets import QCheckBox, QFileDialog, QLabel, QMainWindow, QTableWidgetItem, QAbstractItemView, \
+    QMessageBox, QWidget
 import openpyxl
 from openpyxl import Workbook
 import re
@@ -19,7 +20,7 @@ import sys
 import os
 import images_qr
 
-from dicts import lifetime, choose_position
+from dicts import lifetime, choose_position, choose_position_header, choose_position_header_evry_two
 
 
 class MyThread(QThread):
@@ -39,7 +40,7 @@ class MyThread(QThread):
         sheets = wb.sheetnames
 
         try:
-            if len(sheets)==1:
+            if len(sheets) == 1:
                 sheet = sheets[0]
             else:
                 self.pause = True
@@ -143,7 +144,7 @@ class MyThread(QThread):
             ws['G' + str(k)].font = Font(size="8", name='Arial')
             ws['G' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
             ws['G' + str(k)].number_format = '0'
-            
+
             k = k + 1
             n = n + 1
 
@@ -233,7 +234,7 @@ class MyThread(QThread):
 
 
 class MyWindow(QtWidgets.QMainWindow):
-    
+
     def __init__(self):
         super(MyWindow, self).__init__()
         self.chooseFilter = ChooseFilter(my_window=self)
@@ -264,7 +265,6 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_2.horizontalHeader().setStretchLastSection(True)
         self.ui.pushButton.clicked.connect(self.openChooseFilter)
 
-
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
                                      int(self.height() * 0.5) - int(self.ui.label_animation.height() * 0.5))
@@ -276,7 +276,7 @@ class MyWindow(QtWidgets.QMainWindow):
         if cDialog.exec():
             self.ChoosedSheet = cDialog.ChoosedSheet
             self.my_thread.pause = False
-        else: 
+        else:
             self.ui.statusbar.showMessage('Анализ отменен')
             self.my_thread.quit()
 
@@ -296,7 +296,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.movie.start()
 
     @QtCore.pyqtSlot(str)
-    def lblDis(self,str):
+    def lblDis(self, str):
         self.ui.label_animation.setEnabled(False)
 
     def btn_clicked(self):
@@ -313,19 +313,19 @@ class MyWindow(QtWidgets.QMainWindow):
                 self.wb.save(file_save)
                 self.ui.statusbar.showMessage('Таблица сохранена')
         except PermissionError as err:
-            messagebox = QMessageBox(parent=self,text='Ошибка доступа. Необходимо закрыть файл',detailedText=str(err))
+            messagebox = QMessageBox(parent=self, text='Ошибка доступа. Необходимо закрыть файл', detailedText=str(err))
             messagebox.setWindowTitle('Внимание!')
             messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
             messagebox.show()
         except Exception as ex:
-            messagebox = QMessageBox(parent=self,text='Ошибка',detailedText=str(ex))
+            messagebox = QMessageBox(parent=self, text='Ошибка', detailedText=str(ex))
             messagebox.setWindowTitle('Внимание!')
             messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
             messagebox.show()
 
     def OpenAbout(self):
         print("triggered")
-        if(self.aboutForm != None):
+        if (self.aboutForm != None):
             self.aboutForm.close()
         self.aboutForm = AboutWindows()
         self.aboutForm.show()
@@ -338,10 +338,12 @@ class ChooseFilter(QtWidgets.QDialog):
 
     def __init__(self, my_window):
         super(ChooseFilter, self).__init__()
+        self.vivod_header = []
         self.my_window = my_window
         self.ui = Ui_Dialog_ChooseFilter()
         self.ui.setupUi(self)
-        spisok =[]
+        spisok = []
+        self.vivod_dict = {}
         for key, value in choose_position.items():
             spisok.append(value)
         self.ui.listWidget.addItems(spisok)
@@ -353,19 +355,32 @@ class ChooseFilter(QtWidgets.QDialog):
         self.ui.pushButton.clicked.connect(self.set_header_table2)
         self.ui.listWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
-
     def printItemText(self):
         items = self.ui.listWidget.selectedItems()
         self.x = []
+        self.vivod_header = []
         for i in range(len(items)):
             self.x.append(str(self.ui.listWidget.selectedItems()[i].text()))
         print(self.x)
+        x = self.x
+        for key, val in choose_position_header.items():
+            for d in x:
+                if d in val:
+                    self.vivod_dict[key] = d
+                    for keyy, vall in choose_position_header_evry_two.items():
+                        if key in keyy:
+                            print(vall)
+                            self.vivod_header.append(key)
+                            self.vivod_header.append(vall)
+        print(self.vivod_dict)
+
 
     def set_header_table2(self):
-        self.my_window.ui.tableWidget_2.setColumnCount(len(self.x))
-        self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(self.x)
+        self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
+        self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(self.vivod_header)
+        self.my_window.ui.tableWidget_2.resizeColumnsToContents()
 
-    
+
 class AboutWindows(QtWidgets.QDialog):
 
     def __init__(self):
@@ -392,7 +407,7 @@ class ChooseWindow(QtWidgets.QDialog):
         print(self.ChoosedSheet)
 
     def RejectChooseList(self):
-        self.ChoosedSheet = 'None'    
+        self.ChoosedSheet = 'None'
 
 
 app = QtWidgets.QApplication([])
