@@ -31,6 +31,7 @@ class MyThread(QThread):
         super(MyThread, self).__init__()
         self.my_window = my_window
         self.pause = False
+        self.mnozh = set()
 
     def run(self):
         self.my_window.ui.statusbar.showMessage('Анализ и сопоставление данных исходной таблицы')
@@ -193,6 +194,7 @@ class MyThread(QThread):
         for cell in ws['A']:
             self.my_window.ui.tableWidget.setItem(schet, 0, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
+            self.mnozh.add(cell.value)
         schet = 0
         for cell in ws['B']:
             self.my_window.ui.tableWidget.setItem(schet, 1, QTableWidgetItem(str(cell.value)))
@@ -264,6 +266,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_2.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.tableWidget_2.horizontalHeader().setStretchLastSection(True)
         self.ui.pushButton.clicked.connect(self.openChooseFilter)
+        self.ui.pushButton_6.clicked.connect(self.openChooseOtdelFilters)
 
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
@@ -333,6 +336,21 @@ class MyWindow(QtWidgets.QMainWindow):
     def openChooseFilter(self):
         self.chooseFilter.show()
 
+    def openChooseOtdelFilters(self):
+        k = 1
+        massive = []
+        txt = "Отдела номер 23"
+        while k != self.ui.tableWidget.rowCount():
+            item = self.ui.tableWidget.item(k,0)
+            text = item.text()
+            print(text)
+            # print(text)
+            # massive.append()
+            k=k+1
+        # print(massive)
+        # for row in self.ui.tableWidget.selectColumn(0): 
+        # _dict = set(self.ui.tableWidget.selectColumn(0))
+        # print(_dict)
 
 class ChooseFilter(QtWidgets.QDialog):
 
@@ -374,6 +392,46 @@ class ChooseFilter(QtWidgets.QDialog):
                             self.vivod_header.append(vall)
         print(self.vivod_dict)
 
+class ChooseOtdelFilter(QtWidgets.QDialog):
+
+    def __init__(self, my_window, spisok):
+        super(ChooseOtdelFilter, self).__init__(spisok)
+        self.otdels = []
+        self.my_window = my_window
+        self.ui = Ui_Dialog_ChooseFilter()
+        self.ui.setupUi(self)
+        spisok = []
+        self.vivod_dict = {}
+        for key, value in choose_position.items():
+            spisok.append(value)
+
+        self.ui.listWidget.addItems(spisok)
+        print(spisok)
+        self.ui.listWidget.setSelectionMode(
+            QtWidgets.QAbstractItemView.ExtendedSelection
+        )
+        self.ui.listWidget.itemClicked.connect(self.printItemText)
+        self.ui.pushButton.clicked.connect(self.set_header_table2)
+        self.ui.listWidget.verticalScrollBar().setStyleSheet('background: #444444')
+        self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
+    def printItemText(self):
+        items = self.ui.listWidget.selectedItems()
+        self.x = []
+        self.vivod_header = []
+        for i in range(len(items)):
+            self.x.append(str(self.ui.listWidget.selectedItems()[i].text()))
+        print(self.x)
+        x = self.x
+        for key, val in choose_position_header.items():
+            for d in x:
+                if d in val:
+                    self.vivod_dict[key] = d
+                    for keyy, vall in choose_position_header_evry_two.items():
+                        if key in keyy:
+                            print(vall)
+                            self.vivod_header.append(key)
+                            self.vivod_header.append(vall)
+        print(self.vivod_dict)
 
     def set_header_table2(self):
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
