@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5 import QtCore
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QCheckBox, QFileDialog, QLabel, QMainWindow, QTableWidgetItem, QAbstractItemView, \
-    QMessageBox, QWidget
+    QMessageBox, QWidget, QHeaderView
 import openpyxl
 from openpyxl import Workbook
 import re
@@ -19,6 +19,7 @@ from ChooseFilter import Ui_Dialog_ChooseFilter
 import sys
 import os
 import images_qr
+import xlwings as xw
 
 from dicts import lifetime, choose_position, choose_position_header, choose_position_header_evry_two
 
@@ -197,7 +198,6 @@ class MyThread(QThread):
             schet = schet + 1
             if cell.value != None:
                 self.mnozh.add(cell.value)
-            else: print(cell.value)
         schet = 0
         for cell in ws['B']:
             self.my_window.ui.tableWidget.setItem(schet, 1, QTableWidgetItem(str(cell.value)))
@@ -226,6 +226,7 @@ class MyThread(QThread):
         for cell in ws['H']:
             self.my_window.ui.tableWidget.setItem(schet, 7, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
+
         self.my_window.ui.tableWidget.resizeColumnsToContents()
         # for cell in ws['D']:
         #     cell.number_format = '0'
@@ -416,8 +417,6 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.mnozh = set
         self.sorted_list = list(self.mnozh)
         self.sorted_list.sort()
-        print(self.sorted_list)
-
         self.ui.listWidget.addItems(self.sorted_list)
         print(self.mnozh)
 
@@ -430,7 +429,10 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
 
     # тут при нажатии будет заполняться первый столбец отделами
     def set_header_table2(self):
-        pass
+        self.my_window.ui.tableWidget_2.setRowCount(len(self.x))
+        self.my_window.ui.tableWidget_2.setVerticalHeaderLabels(self.x)
+        self.my_window.ui.tableWidget_2.resizeColumnsToContents()
+        self.my_window.ui.tableWidget_2.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
 
 class AboutWindows(QtWidgets.QDialog):
