@@ -195,7 +195,9 @@ class MyThread(QThread):
         for cell in ws['A']:
             self.my_window.ui.tableWidget.setItem(schet, 0, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
-            self.mnozh.add(cell.value)
+            if cell.value != None:
+                self.mnozh.add(cell.value)
+            else: print(cell.value)
         schet = 0
         for cell in ws['B']:
             self.my_window.ui.tableWidget.setItem(schet, 1, QTableWidgetItem(str(cell.value)))
@@ -409,9 +411,14 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
 
     QtCore.pyqtSignal(set)
+    
     def getMnozh(self, set):
         self.mnozh = set
-        self.ui.listWidget.addItems(list(self.mnozh))
+        self.sorted_list = list(self.mnozh)
+        self.sorted_list.sort()
+        print(self.sorted_list)
+
+        self.ui.listWidget.addItems(self.sorted_list)
         print(self.mnozh)
 
     def printItemText(self):
