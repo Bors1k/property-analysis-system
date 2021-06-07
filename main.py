@@ -26,6 +26,7 @@ from dicts import lifetime, choose_position, choose_position_header, choose_posi
 class MyThread(QThread):
     showMessageBox = QtCore.pyqtSignal(list)
     fihishThread = QtCore.pyqtSignal(str)
+    send_mnozh = QtCore.pyqtSignal(set)
 
     def __init__(self, my_window, parent=None):
         super(MyThread, self).__init__()
@@ -232,6 +233,7 @@ class MyThread(QThread):
         self.my_window.ui.pushButton_3.setEnabled(True)
         self.my_window.ui.label_animation.setMovie(None)
         self.my_window.movie.stop()
+        self.send_mnozh.emit(self.mnozh)
         self.fihishThread.emit("ended")
 
 
@@ -240,6 +242,7 @@ class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
         self.chooseFilter = ChooseFilter(my_window=self)
+        self.chooseOtdelFilter = ChooseOtdelFilter(my_window=self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.aboutForm = None
@@ -292,6 +295,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.my_thread = MyThread(my_window=self)
         self.my_thread.showMessageBox.connect(self.msgBox)
         self.my_thread.fihishThread.connect((self.lblDis))
+        self.my_thread.send_mnozh.connect(self.chooseOtdelFilter.getMnozh)
         self.my_thread.start()
         self.movie = QMovie(':Spinner.gif')
         self.movie.setScaledSize(QSize(70, 130))
@@ -337,20 +341,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.chooseFilter.show()
 
     def openChooseOtdelFilters(self):
-        k = 1
-        massive = []
-        txt = "Отдела номер 23"
-        while k != self.ui.tableWidget.rowCount():
-            item = self.ui.tableWidget.item(k,0)
-            text = item.text()
-            print(text)
-            # print(text)
-            # massive.append()
-            k=k+1
-        # print(massive)
-        # for row in self.ui.tableWidget.selectColumn(0): 
-        # _dict = set(self.ui.tableWidget.selectColumn(0))
-        # print(_dict)
+        self.chooseOtdelFilter.show()
+
 
 class ChooseFilter(QtWidgets.QDialog):
 
@@ -373,6 +365,7 @@ class ChooseFilter(QtWidgets.QDialog):
         self.ui.pushButton.clicked.connect(self.set_header_table2)
         self.ui.listWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
+
     def printItemText(self):
         items = self.ui.listWidget.selectedItems()
         self.x = []
@@ -392,21 +385,21 @@ class ChooseFilter(QtWidgets.QDialog):
                             self.vivod_header.append(vall)
         print(self.vivod_dict)
 
+    def set_header_table2(self):
+        self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
+        self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(self.vivod_header)
+        self.my_window.ui.tableWidget_2.resizeColumnsToContents()
+
+
 class ChooseOtdelFilter(QtWidgets.QDialog):
 
-    def __init__(self, my_window, spisok):
-        super(ChooseOtdelFilter, self).__init__(spisok)
+    def __init__(self, my_window):
+        super(ChooseOtdelFilter, self).__init__()
         self.otdels = []
         self.my_window = my_window
         self.ui = Ui_Dialog_ChooseFilter()
         self.ui.setupUi(self)
-        spisok = []
-        self.vivod_dict = {}
-        for key, value in choose_position.items():
-            spisok.append(value)
 
-        self.ui.listWidget.addItems(spisok)
-        print(spisok)
         self.ui.listWidget.setSelectionMode(
             QtWidgets.QAbstractItemView.ExtendedSelection
         )
@@ -414,6 +407,13 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.ui.pushButton.clicked.connect(self.set_header_table2)
         self.ui.listWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
+
+    QtCore.pyqtSignal(set)
+    def getMnozh(self, set):
+        self.mnozh = set
+        self.ui.listWidget.addItems(list(self.mnozh))
+        print(self.mnozh)
+
     def printItemText(self):
         items = self.ui.listWidget.selectedItems()
         self.x = []
