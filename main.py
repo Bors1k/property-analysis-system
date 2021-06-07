@@ -417,26 +417,13 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
     def printItemText(self):
         items = self.ui.listWidget.selectedItems()
         self.x = []
-        self.vivod_header = []
         for i in range(len(items)):
             self.x.append(str(self.ui.listWidget.selectedItems()[i].text()))
         print(self.x)
-        x = self.x
-        for key, val in choose_position_header.items():
-            for d in x:
-                if d in val:
-                    self.vivod_dict[key] = d
-                    for keyy, vall in choose_position_header_evry_two.items():
-                        if key in keyy:
-                            print(vall)
-                            self.vivod_header.append(key)
-                            self.vivod_header.append(vall)
-        print(self.vivod_dict)
 
+    # тут при нажатии будет заполняться первый столбец отделами
     def set_header_table2(self):
-        self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
-        self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(self.vivod_header)
-        self.my_window.ui.tableWidget_2.resizeColumnsToContents()
+        pass
 
 
 class AboutWindows(QtWidgets.QDialog):
