@@ -20,6 +20,7 @@ import sys
 import os
 import images_qr
 import xlwings as xw
+import analize
 
 from dicts import lifetime, choose_position, choose_position_header, choose_position_header_evry_two
 
@@ -215,6 +216,7 @@ class MyThread(QThread):
             self.my_window.ui.tableWidget.setItem(schet, 4, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
+
         for cell in ws['F']:
             self.my_window.ui.tableWidget.setItem(schet, 5, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
@@ -228,6 +230,14 @@ class MyThread(QThread):
             schet = schet + 1
 
         self.my_window.ui.tableWidget.resizeColumnsToContents()
+
+
+        self.my_window.wb.save('C:\Windows\Temp\Сводный перечень имущества.xlsx')
+        filename = 'C:\Windows\Temp\Сводный перечень имущества.xlsx'
+        self.analize = analize.Analyze()
+        self.analize.analyze_xls(filename=filename)
+
+
         # for cell in ws['D']:
         #     cell.number_format = '0'
         ws.auto_filter.ref = ws.dimensions
@@ -238,6 +248,8 @@ class MyThread(QThread):
         self.my_window.movie.stop()
         self.send_mnozh.emit(self.mnozh)
         self.fihishThread.emit("ended")
+
+
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -334,7 +346,6 @@ class MyWindow(QtWidgets.QMainWindow):
             messagebox.show()
 
     def OpenAbout(self):
-        print("triggered")
         if (self.aboutForm != None):
             self.aboutForm.close()
         self.aboutForm = AboutWindows()
@@ -360,7 +371,6 @@ class ChooseFilter(QtWidgets.QDialog):
         for key, value in choose_position.items():
             spisok.append(value)
         self.ui.listWidget.addItems(spisok)
-        print(spisok)
         self.ui.listWidget.setSelectionMode(
             QtWidgets.QAbstractItemView.ExtendedSelection
         )
@@ -418,7 +428,6 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.sorted_list = list(self.mnozh)
         self.sorted_list.sort()
         self.ui.listWidget.addItems(self.sorted_list)
-        print(self.mnozh)
 
     def printItemText(self):
         items = self.ui.listWidget.selectedItems()
@@ -458,7 +467,6 @@ class ChooseWindow(QtWidgets.QDialog):
 
     def ChooseList(self):
         self.ChoosedSheet = self.ui.comboBox.currentText()
-        print(self.ChoosedSheet)
 
     def RejectChooseList(self):
         self.ChoosedSheet = 'None'
