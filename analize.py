@@ -1,6 +1,6 @@
 import xlwings
 import xlwings as xw
-from openpyxl import *
+import os
 
 
 class Analyze:
@@ -52,3 +52,6 @@ class Analyze:
             print(str(key) + ' ' + str(value))
 
         wbxl.close()
+
+        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)
+        os.remove(path)
