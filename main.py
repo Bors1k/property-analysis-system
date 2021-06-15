@@ -385,7 +385,7 @@ class ChooseFilter(QtWidgets.QDialog):
         self.vivod_header = []
         for i in range(len(items)):
             self.znach.append(str(self.ui.listWidget.selectedItems()[i].text()))
-        print(self.znach)
+        # print(self.znach)
         znach = self.znach
         for key, val in choose_position_header.items():
             for d in znach:
@@ -393,10 +393,10 @@ class ChooseFilter(QtWidgets.QDialog):
                     self.vivod_dict[key] = d
                     for keyy, vall in choose_position_header_evry_two.items():
                         if key in keyy:
-                            print(vall)
+                            # print(vall)
                             self.vivod_header.append(key)
                             self.vivod_header.append(vall)
-        print(self.vivod_dict)
+        # print(self.vivod_dict)
 
     def set_header_table2(self):
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
@@ -434,7 +434,7 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.otdel = []
         for i in range(len(items)):
             self.otdel.append(str(self.ui.listWidget.selectedItems()[i].text()))
-        print(self.otdel)
+        # print(self.otdel)
     # тут при нажатии будет заполняться первый столбец отделами
     def set_header_table2(self):
         self.my_window.ui.tableWidget_2.setRowCount(len(self.otdel))
