@@ -9,10 +9,13 @@ class Otdel:
         self.shipments = [Shipment]
 
     def addNewGood(self, shipment: Shipment):
-        if(self.checkForNewOne(shipment.getName())):
-            self.shipments.append()
-
-    def checkForNewOne(self, shipmentName):
-        for shipment in self.shipments:
-            if(shipmentName == shipment.getName()):
-                return False
+        flag = True
+        if(len(self.shipments)!=0):
+            for TempShipment in self.shipments:
+                if(shipment.getName() == TempShipment.getName()):
+                    TempShipment.increaseCount()
+                    flag = False
+            if(flag):
+                self.shipments.append(shipment)
+        else:
+            self.shipments.append(shipment)
