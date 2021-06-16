@@ -15,6 +15,8 @@ from form import Ui_MainWindow  # импорт нашего сгенериров
 from AboutForm import Ui_Dialog
 from ChooseForm import Choose_Dialog
 from ChooseFilter import Ui_Dialog_ChooseFilter
+from otdel import Otdel
+from shipment import Shipment
 
 import sys
 import os
@@ -233,12 +235,9 @@ class MyThread(QThread):
 
 
         self.my_window.wb.save('C:\Windows\Temp\Сводный перечень имущества.xlsx')
-        filename = 'C:\Windows\Temp\Сводный перечень имущества.xlsx'
         # self.analizes = analize.Analyze()
         # self.analizes.analyze_xls(filename=filename)
-        self.my_window.analizes.analyze_xls(filename=filename)
-
-
+        
         # for cell in ws['D']:
         #     cell.number_format = '0'
         ws.auto_filter.ref = ws.dimensions
@@ -254,6 +253,7 @@ class MyThread(QThread):
 class MyWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
+        self.otdels = []
         self.analizes = analize.Analyze(my_window=self)
         super(MyWindow, self).__init__()
         self.chooseFilter = ChooseFilter(my_window=self)
@@ -409,7 +409,7 @@ class ChooseFilter(QtWidgets.QDialog):
 class ChooseOtdelFilter(QtWidgets.QDialog):
     def __init__(self, my_window):
         super(ChooseOtdelFilter, self).__init__()
-        self.otdels = []
+        # self.otdels = []
         self.my_window = my_window
         self.ui = Ui_Dialog_ChooseFilter()
         self.ui.setupUi(self)
@@ -425,9 +425,18 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
     @QtCore.pyqtSlot(set)
     def getMnozh(self, set):
         self.mnozh = set
-        self.sorted_list = list(self.mnozh)
-        self.sorted_list.sort()
-        self.ui.listWidget.addItems(self.sorted_list)
+        for item in self.mnozh:
+            self.my_window.otdels.append(Otdel(item))
+
+        self.my_window.analizes.set_otdel(otdel=self.my_window.otdels)
+        filename = 'C:\Windows\Temp\Сводный перечень имущества.xlsx'
+        self.my_window.analizes.analyze_xls(filename=filename)
+        # self.sorted_list = list(self.mnozh)
+        # self.sorted_list.sort()
+
+        for item in self.my_window.otdels:
+            self.ui.listWidget.addItem(item.getName())
+        # self.ui.listWidget.addItems(self.sorted_list)
 
     def printItemText(self):
         items = self.ui.listWidget.selectedItems()
@@ -441,7 +450,7 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.my_window.ui.tableWidget_2.setVerticalHeaderLabels(self.otdel)
         self.my_window.ui.tableWidget_2.resizeColumnsToContents()
         self.my_window.ui.tableWidget_2.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.my_window.analizes.set_otdel(self.otdel)
+        self.my_window.analizes.set_otdel(otdel=self.my_window.otdels)
 
 class AboutWindows(QtWidgets.QDialog):
 

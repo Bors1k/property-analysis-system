@@ -9,5 +9,5 @@ class Shipment:
     def getName(self):
         return self.name
     
-    def increaseCount(self):
-        self.shipCount += 1
+    def increaseCount(self,count):
+        self.shipCount += count
