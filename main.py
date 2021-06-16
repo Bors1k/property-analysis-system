@@ -39,7 +39,8 @@ class MyThread(QThread):
         self.mnozh = set()
 
     def run(self):
-        self.my_window.ui.statusbar.showMessage('Анализ и сопоставление данных исходной таблицы')
+        self.my_window.ui.statusbar.showMessage(
+            'Анализ и сопоставление данных исходной таблицы')
         self.my_window.ui.pushButton_2.setEnabled(False)
         self.my_window.ui.pushButton_3.setEnabled(False)
         wb = openpyxl.load_workbook(self.my_window.filename[0])
@@ -51,14 +52,17 @@ class MyThread(QThread):
             else:
                 self.pause = True
                 self.showMessageBox.emit(sheets)
-                while self.pause: self.sleep(1)
+                while self.pause:
+                    self.sleep(1)
                 sheet = self.my_window.ChoosedSheet
                 # sheet = sheets[2]
         except Exception as ex:
 
-            messagebox = QMessageBox(parent=self, text='Ошибка', detailedText=str(ex))
+            messagebox = QMessageBox(
+                parent=self, text='Ошибка', detailedText=str(ex))
             messagebox.setWindowTitle('Внимание!')
-            messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
+            messagebox.setStyleSheet(
+                '.QPushButton{background-color: #444444;color: white;}')
             messagebox.show()
 
         name_sheet = wb[sheet]
@@ -75,7 +79,8 @@ class MyThread(QThread):
                 if name_sheet['C' + str(n)].value is not None:
                     ws['A' + str(k)] = znach
                     ws['A' + str(k)].font = Font(size="8", name='Arial')
-                    ws['A' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+                    ws['A' + str(k)].alignment = Alignment(horizontal='center',
+                                                           vertical='center')
                     k = k + 1
             else:
                 if name_sheet['C' + str(n)].value is None:
@@ -84,7 +89,8 @@ class MyThread(QThread):
                     znach = cell.value
                     ws['A' + str(k)] = znach
                     ws['A' + str(k)].font = Font(size="8", name='Arial')
-                    ws['A' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+                    ws['A' + str(k)].alignment = Alignment(horizontal='center',
+                                                           vertical='center')
                     k = k + 1
             n = n + 1
         self.my_window.ui.statusbar.showMessage('Конвертация данных')
@@ -94,7 +100,8 @@ class MyThread(QThread):
             if name_sheet['C' + str(n)].value is not None:
                 ws['B' + str(k)] = cell.value
                 ws['B' + str(k)].font = Font(size="8", name='Arial')
-                ws['B' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+                ws['B' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
                 k = k + 1
             n = n + 1
         n = 1
@@ -103,7 +110,8 @@ class MyThread(QThread):
             if name_sheet['C' + str(n)].value is not None:
                 ws['D' + str(k)] = cell.value
                 ws['D' + str(k)].font = Font(size="8", name='Arial')
-                ws['D' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+                ws['D' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
                 ws['D' + str(k)].number_format = '0'
                 k = k + 1
             n = n + 1
@@ -113,7 +121,8 @@ class MyThread(QThread):
             if name_sheet['C' + str(n)].value is not None:
                 ws['E' + str(k)] = cell.value
                 ws['E' + str(k)].font = Font(size="8", name='Arial')
-                ws['E' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+                ws['E' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
                 k = k + 1
             n = n + 1
         n = 1
@@ -122,7 +131,8 @@ class MyThread(QThread):
             if name_sheet['C' + str(n)].value is not None:
                 ws['C' + str(k)] = cell.value
                 ws['C' + str(k)].font = Font(size="8", name='Arial')
-                ws['C' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+                ws['C' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
                 k = k + 1
             n = n + 1
         n = 1
@@ -130,7 +140,8 @@ class MyThread(QThread):
         for cell in ws['B']:
             ws['F' + str(k)] = "=YEARFRAC(E" + str(k) + ",TODAY(),1)"
             ws['F' + str(k)].font = Font(size="8", name='Arial')
-            ws['F' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+            ws['F' + str(k)].alignment = Alignment(horizontal='center',
+                                                   vertical='center')
             k = k + 1
             n = n + 1
         self.my_window.ui.statusbar.showMessage('Последние штрихи')
@@ -140,7 +151,8 @@ class MyThread(QThread):
             ws['H' + str(k)] = "=IF((G" + str(k) + "-F" + str(k) + ")<0,F" + str(k) + "-G" + str(k) + ",\"в пределах " \
                                                                                                       "срока\") "
             ws['H' + str(k)].font = Font(size="8", name='Arial')
-            ws['H' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+            ws['H' + str(k)].alignment = Alignment(horizontal='center',
+                                                   vertical='center')
             ws['H' + str(k)].number_format = '0.0'
 
             for key in lifetime:
@@ -148,7 +160,8 @@ class MyThread(QThread):
                     ws['G' + str(k)] = lifetime[key]
 
             ws['G' + str(k)].font = Font(size="8", name='Arial')
-            ws['G' + str(k)].alignment = Alignment(horizontal='center', vertical='center')
+            ws['G' + str(k)].alignment = Alignment(horizontal='center',
+                                                   vertical='center')
             ws['G' + str(k)].number_format = '0'
 
             k = k + 1
@@ -164,28 +177,36 @@ class MyThread(QThread):
 
         ws['A1'] = 'Отдел'
         ws['A1'].font = Font(bold=True, size="10", name='Arial')
-        ws['A1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['A1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
         ws['B1'] = 'Наименование имущества'
         ws['B1'].font = Font(bold=True, size="10", name='Arial')
-        ws['B1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['B1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
         ws['C1'] = 'Кол-во'
         ws['C1'].font = Font(bold=True, size="10", name='Arial')
-        ws['C1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['C1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
         ws['D1'] = 'Инвентарный номер'
         ws['D1'].font = Font(bold=True, size="10", name='Arial')
-        ws['D1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['D1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
         ws['E1'] = 'Дата принятия к учету'
         ws['E1'].font = Font(bold=True, size="10", name='Arial')
-        ws['E1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['E1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
         ws['F1'] = 'Срок использования'
         ws['F1'].font = Font(bold=True, size="10", name='Arial')
-        ws['F1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['F1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
         ws['G1'] = 'Срок по нормам, лет'
         ws['G1'].font = Font(bold=True, size="10", name='Arial')
-        ws['G1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['G1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
         ws['H1'] = 'Срок превышен, лет'
         ws['H1'].font = Font(bold=True, size="10", name='Arial')
-        ws['H1'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+        ws['H1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
 
         self.my_window.ui.tableWidget.setColumnCount(ws.max_column)
         self.my_window.ui.tableWidget.setHorizontalHeaderLabels(
@@ -197,47 +218,55 @@ class MyThread(QThread):
 
         schet = 0
         for cell in ws['A']:
-            self.my_window.ui.tableWidget.setItem(schet, 0, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(
+                schet, 0, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
             if cell.value != None:
                 self.mnozh.add(cell.value)
         schet = 0
         for cell in ws['B']:
-            self.my_window.ui.tableWidget.setItem(schet, 1, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(
+                schet, 1, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['C']:
-            self.my_window.ui.tableWidget.setItem(schet, 2, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(
+                schet, 2, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['D']:
-            self.my_window.ui.tableWidget.setItem(schet, 3, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(
+                schet, 3, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['E']:
-            self.my_window.ui.tableWidget.setItem(schet, 4, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(
+                schet, 4, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
 
         for cell in ws['F']:
-            self.my_window.ui.tableWidget.setItem(schet, 5, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(
+                schet, 5, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['G']:
-            self.my_window.ui.tableWidget.setItem(schet, 6, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(
+                schet, 6, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
         schet = 0
         for cell in ws['H']:
-            self.my_window.ui.tableWidget.setItem(schet, 7, QTableWidgetItem(str(cell.value)))
+            self.my_window.ui.tableWidget.setItem(
+                schet, 7, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
 
         self.my_window.ui.tableWidget.resizeColumnsToContents()
 
-
-        self.my_window.wb.save('C:\Windows\Temp\Сводный перечень имущества.xlsx')
+        self.my_window.wb.save(
+            'C:\Windows\Temp\Сводный перечень имущества.xlsx')
         # self.analizes = analize.Analyze()
         # self.analizes.analyze_xls(filename=filename)
-        
+
         # for cell in ws['D']:
         #     cell.number_format = '0'
         ws.auto_filter.ref = ws.dimensions
@@ -322,27 +351,33 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.label_animation.setEnabled(False)
 
     def btn_clicked(self):
-        self.filename = QFileDialog.getOpenFileName(None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
+        self.filename = QFileDialog.getOpenFileName(
+            None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
         if str(self.filename) in "('', '')":
             self.ui.statusbar.showMessage('Файл не выбран')
         else:
             self.new_thread()
 
     def save_btn_clicked(self):
-        file_save, _ = QFileDialog.getSaveFileName(self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
+        file_save, _ = QFileDialog.getSaveFileName(
+            self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
         try:
             if str(file_save) != "":
                 self.wb.save(file_save)
                 self.ui.statusbar.showMessage('Таблица сохранена')
         except PermissionError as err:
-            messagebox = QMessageBox(parent=self, text='Ошибка доступа. Необходимо закрыть файл', detailedText=str(err))
+            messagebox = QMessageBox(
+                parent=self, text='Ошибка доступа. Необходимо закрыть файл', detailedText=str(err))
             messagebox.setWindowTitle('Внимание!')
-            messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
+            messagebox.setStyleSheet(
+                '.QPushButton{background-color: #444444;color: white;}')
             messagebox.show()
         except Exception as ex:
-            messagebox = QMessageBox(parent=self, text='Ошибка', detailedText=str(ex))
+            messagebox = QMessageBox(
+                parent=self, text='Ошибка', detailedText=str(ex))
             messagebox.setWindowTitle('Внимание!')
-            messagebox.setStyleSheet('.QPushButton{background-color: #444444;color: white;}')
+            messagebox.setStyleSheet(
+                '.QPushButton{background-color: #444444;color: white;}')
             messagebox.show()
 
     def OpenAbout(self):
@@ -384,7 +419,8 @@ class ChooseFilter(QtWidgets.QDialog):
         self.znach = []
         self.vivod_header = []
         for i in range(len(items)):
-            self.znach.append(str(self.ui.listWidget.selectedItems()[i].text()))
+            self.znach.append(
+                str(self.ui.listWidget.selectedItems()[i].text()))
         # print(self.znach)
         znach = self.znach
         for key, val in choose_position_header.items():
@@ -400,7 +436,8 @@ class ChooseFilter(QtWidgets.QDialog):
 
     def set_header_table2(self):
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
-        self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(self.vivod_header)
+        self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(
+            self.vivod_header)
         # self.my_window.ui.tableWidget_2.resizeColumnsToContents(
         self.my_window.analizes.set_znach(self.znach)
         self.my_window.analizes.calculate()
@@ -417,7 +454,7 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.ui.listWidget.setSelectionMode(
             QtWidgets.QAbstractItemView.ExtendedSelection
         )
-        self.ui.listWidget.itemClicked.connect(self.printItemText)
+        # self.ui.listWidget.itemClicked.connect(self.printItemText)
         self.ui.pushButton.clicked.connect(self.set_header_table2)
         self.ui.listWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
@@ -425,32 +462,40 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
     @QtCore.pyqtSlot(set)
     def getMnozh(self, set):
         self.mnozh = set
-        for item in self.mnozh:
-            self.my_window.otdels.append(Otdel(item))
+        self.sorted_list = list(self.mnozh)
+        self.sorted_list.sort()
+        self.ui.listWidget.addItems(self.sorted_list)
+
+    # def printItemText(self):
+    #     items = self.ui.listWidget.selectedItems()
+    #     self.otdel = []
+    #     for i in range(len(items)):
+    #         self.otdel.append(str(self.ui.listWidget.selectedItems()[i].text()))
+    #         self.my_window.otdels.append(Otdel(self.ui.listWidget.selectedItems()[i].text()))
+
+        # print(self.otdel)
+    # тут при нажатии будет заполняться первый столбец отделами
+
+    def set_header_table2(self):
+
+        items = self.ui.listWidget.selectedItems()
+        self.otdel = []
+        for i in range(len(items)):
+            self.otdel.append(
+                str(self.ui.listWidget.selectedItems()[i].text()))
+            self.my_window.otdels.append(
+                Otdel(self.ui.listWidget.selectedItems()[i].text()))
+
+        self.my_window.ui.tableWidget_2.setRowCount(len(self.otdel))
+        self.my_window.ui.tableWidget_2.setVerticalHeaderLabels(self.otdel)
+        self.my_window.ui.tableWidget_2.resizeColumnsToContents()
+        self.my_window.ui.tableWidget_2.verticalHeader(
+        ).setSectionResizeMode(QHeaderView.Stretch)
 
         self.my_window.analizes.set_otdel(otdel=self.my_window.otdels)
         filename = 'C:\Windows\Temp\Сводный перечень имущества.xlsx'
         self.my_window.analizes.analyze_xls(filename=filename)
-        # self.sorted_list = list(self.mnozh)
-        # self.sorted_list.sort()
 
-        for item in self.my_window.otdels:
-            self.ui.listWidget.addItem(item.getName())
-        # self.ui.listWidget.addItems(self.sorted_list)
-
-    def printItemText(self):
-        items = self.ui.listWidget.selectedItems()
-        self.otdel = []
-        for i in range(len(items)):
-            self.otdel.append(str(self.ui.listWidget.selectedItems()[i].text()))
-        # print(self.otdel)
-    # тут при нажатии будет заполняться первый столбец отделами
-    def set_header_table2(self):
-        self.my_window.ui.tableWidget_2.setRowCount(len(self.otdel))
-        self.my_window.ui.tableWidget_2.setVerticalHeaderLabels(self.otdel)
-        self.my_window.ui.tableWidget_2.resizeColumnsToContents()
-        self.my_window.ui.tableWidget_2.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.my_window.analizes.set_otdel(otdel=self.my_window.otdels)
 
 class AboutWindows(QtWidgets.QDialog):
 
