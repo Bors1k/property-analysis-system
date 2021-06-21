@@ -264,11 +264,7 @@ class MyThread(QThread):
 
         self.my_window.wb.save(
             'C:\Windows\Temp\Сводный перечень имущества.xlsx')
-        # self.analizes = analize.Analyze()
-        # self.analizes.analyze_xls(filename=filename)
 
-        # for cell in ws['D']:
-        #     cell.number_format = '0'
         ws.auto_filter.ref = ws.dimensions
         self.my_window.ui.statusbar.showMessage('Таблица сконвертирована')
         self.my_window.ui.pushButton_2.setEnabled(True)
@@ -313,7 +309,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_2.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.tableWidget_2.horizontalHeader().setStretchLastSection(True)
         self.ui.pushButton.clicked.connect(self.openChooseFilter)
+        self.ui.pushButton_5.clicked.connect(self.resetAnalyz)
         self.ui.pushButton_6.clicked.connect(self.openChooseOtdelFilters)
+        self.ui.pushButton_7.clicked.connect(self.startAnalyz)
 
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
@@ -392,6 +390,35 @@ class MyWindow(QtWidgets.QMainWindow):
     def openChooseOtdelFilters(self):
         self.chooseOtdelFilter.show()
 
+    def resetAnalyz(self):
+        self.ui.tableWidget_2.clear()
+        self.ui.tableWidget_2.setRowCount(0)
+        self.ui.tableWidget_2.setColumnCount(0)
+        
+
+    def startAnalyz(self):
+        self.filename = 'C:\Windows\Temp\Сводный перечень имущества.xlsx'
+        self.otdels = self.analizes.analyze_xls(filename=self.filename)
+
+        for i in range(self.ui.tableWidget_2.rowCount()):
+            for j in range(self.ui.tableWidget_2.columnCount()):
+                for otdel in self.otdels:
+                    if(otdel.name == self.ui.tableWidget_2.verticalHeaderItem(i).text()):
+                        tempFlag = False
+                        for ship in otdel.shipments:
+                            if(ship.name == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
+                                self.ui.tableWidget_2.setItem(
+                                    i, j, QTableWidgetItem(str(ship.shipCount)))
+                                tempFlag = True
+                            if(choose_position_header_evry_two[ship.name] == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
+                                self.ui.tableWidget_2.setItem(
+                                    i, j, QTableWidgetItem(str(ship.expiredShipCount)))
+                                tempFlag = True
+
+                        if(tempFlag == False):
+                            self.ui.tableWidget_2.setItem(
+                                i, j, QTableWidgetItem(str(0)))
+
 
 class ChooseFilter(QtWidgets.QDialog):
 
@@ -409,19 +436,19 @@ class ChooseFilter(QtWidgets.QDialog):
         self.ui.listWidget.setSelectionMode(
             QtWidgets.QAbstractItemView.ExtendedSelection
         )
-        self.ui.listWidget.itemClicked.connect(self.printItemText)
+
         self.ui.pushButton.clicked.connect(self.set_header_table2)
         self.ui.listWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
 
-    def printItemText(self):
+    def set_header_table2(self):
         items = self.ui.listWidget.selectedItems()
         self.znach = []
         self.vivod_header = []
         for i in range(len(items)):
             self.znach.append(
                 str(self.ui.listWidget.selectedItems()[i].text()))
-        # print(self.znach)
+
         znach = self.znach
         for key, val in choose_position_header.items():
             for d in znach:
@@ -429,24 +456,21 @@ class ChooseFilter(QtWidgets.QDialog):
                     self.vivod_dict[key] = d
                     for keyy, vall in choose_position_header_evry_two.items():
                         if key in keyy:
-                            # print(vall)
                             self.vivod_header.append(key)
                             self.vivod_header.append(vall)
-        # print(self.vivod_dict)
 
-    def set_header_table2(self):
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
         self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(
             self.vivod_header)
-        # self.my_window.ui.tableWidget_2.resizeColumnsToContents(
+        self.my_window.ui.tableWidget_2.resizeColumnsToContents()
         self.my_window.analizes.set_znach(self.znach)
-        self.my_window.analizes.calculate()
+        
+        self.close()
 
 
 class ChooseOtdelFilter(QtWidgets.QDialog):
     def __init__(self, my_window):
         super(ChooseOtdelFilter, self).__init__()
-        # self.otdels = []
         self.my_window = my_window
         self.ui = Ui_Dialog_ChooseFilter()
         self.ui.setupUi(self)
@@ -454,7 +478,6 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.ui.listWidget.setSelectionMode(
             QtWidgets.QAbstractItemView.ExtendedSelection
         )
-        # self.ui.listWidget.itemClicked.connect(self.printItemText)
         self.ui.pushButton.clicked.connect(self.set_header_table2)
         self.ui.listWidget.verticalScrollBar().setStyleSheet('background: #444444')
         self.ui.listWidget.horizontalScrollBar().setStyleSheet('background: #444444')
@@ -466,20 +489,10 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.sorted_list.sort()
         self.ui.listWidget.addItems(self.sorted_list)
 
-    # def printItemText(self):
-    #     items = self.ui.listWidget.selectedItems()
-    #     self.otdel = []
-    #     for i in range(len(items)):
-    #         self.otdel.append(str(self.ui.listWidget.selectedItems()[i].text()))
-    #         self.my_window.otdels.append(Otdel(self.ui.listWidget.selectedItems()[i].text()))
-
-        # print(self.otdel)
-    # тут при нажатии будет заполняться первый столбец отделами
-
     def set_header_table2(self):
-
         items = self.ui.listWidget.selectedItems()
         self.otdel = []
+        self.my_window.otdels = []
         for i in range(len(items)):
             self.otdel.append(
                 str(self.ui.listWidget.selectedItems()[i].text()))
@@ -493,8 +506,7 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         ).setSectionResizeMode(QHeaderView.Stretch)
 
         self.my_window.analizes.set_otdel(otdel=self.my_window.otdels)
-        filename = 'C:\Windows\Temp\Сводный перечень имущества.xlsx'
-        self.my_window.analizes.analyze_xls(filename=filename)
+        self.close()
 
 
 class AboutWindows(QtWidgets.QDialog):

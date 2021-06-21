@@ -8,17 +8,19 @@ class Otdel:
         self.name = name
         self.shipments = []
 
-    def addNewShipment(self, shipment: Shipment,count):
+    def addNewShipment(self,shipments, shipment: Shipment,count,srok):
         flag = True
-        if(len(self.shipments)!=0):
-            for TempShipment in self.shipments:
+        if(len(shipments)!=0):
+            for TempShipment in shipments:
                 if(shipment.getName() == TempShipment.getName()):
-                    TempShipment.increaseCount(count)
+                    TempShipment.increaseCount(count,srok)
                     flag = False
             if(flag):
-                self.shipments.append(shipment)
+                shipment.increaseCount(count,srok)
+                shipments.append(shipment)
         else:
-            self.shipments.append(shipment)
+            shipment.increaseCount(count,srok)
+            shipments.append(shipment)
 
     def getName(self):
         return self.name
