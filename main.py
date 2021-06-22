@@ -394,7 +394,6 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_2.clear()
         self.ui.tableWidget_2.setRowCount(0)
         self.ui.tableWidget_2.setColumnCount(0)
-        
 
     def startAnalyz(self):
         self.filename = 'C:\Windows\Temp\Сводный перечень имущества.xlsx'
@@ -451,20 +450,17 @@ class ChooseFilter(QtWidgets.QDialog):
 
         znach = self.znach
         for key, val in choose_position_header.items():
-            for d in znach:
-                if d in val:
-                    self.vivod_dict[key] = d
-                    for keyy, vall in choose_position_header_evry_two.items():
-                        if key in keyy:
-                            self.vivod_header.append(key)
-                            self.vivod_header.append(vall)
-
+            for value in znach:
+                if(value == val):
+                    self.vivod_header.append(key)
+                    self.vivod_header.append(choose_position_header_evry_two[key])
+                
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
         self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(
             self.vivod_header)
         self.my_window.ui.tableWidget_2.resizeColumnsToContents()
         self.my_window.analizes.set_znach(self.znach)
-        
+
         self.close()
 
 
