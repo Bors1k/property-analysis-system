@@ -1,3 +1,4 @@
+from ntpath import join
 from PyQt5 import QtWidgets, QtGui
 from PyQt5 import QtCore
 from PyQt5.QtGui import QMovie
@@ -350,7 +351,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def btn_clicked(self):
         self.filename = QFileDialog.getOpenFileName(
-            None, 'Открыть', os.path.dirname("C:\\"), 'All Files(*.xlsx)')
+            None, 'Открыть', os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop'), 'All Files(*.xlsx)')
         if str(self.filename) in "('', '')":
             self.ui.statusbar.showMessage('Файл не выбран')
         else:
@@ -415,9 +416,43 @@ class MyWindow(QtWidgets.QMainWindow):
                                 tempFlag = True
 
                         if(tempFlag == False):
-                            self.ui.tableWidget_2.setItem(
-                                i, j, QTableWidgetItem(str(0)))
+                            self.ui.tableWidget_2.setItem(i, j, QTableWidgetItem(str(0)))
 
+        if(len(self.wb.sheetnames)==1):
+            sheet = self.wb.create_sheet('Аналитика по отделам')
+        else:
+            sheet = self.wb[self.wb.sheetname[1]]
+            
+        k = 0.9
+        maxWidth = 0
+        for i in range(self.ui.tableWidget_2.rowCount()):
+            cellref = sheet.cell(i+2,1)
+            text = self.ui.tableWidget_2.verticalHeaderItem(i).text()
+            cellref.value = text
+            cellref.font = Font(size="8", name='Arial')
+            cellref.alignment = Alignment(horizontal='center',vertical='center')
+            if(maxWidth<len(text) * k):
+                maxWidth = len(text) * k
+            sheet.column_dimensions[cellref.column_letter].width = maxWidth
+
+        for j in range(self.ui.tableWidget_2.columnCount()):
+            cellref = sheet.cell(1,j+2)
+            text = self.ui.tableWidget_2.horizontalHeaderItem(j).text()
+            cellref.value = text
+            cellref.font = Font(size="8", name='Arial')
+            cellref.alignment = Alignment(horizontal='center',vertical='center')
+            sheet.column_dimensions[cellref.column_letter].width = len(text) * k
+
+        for i in range(self.ui.tableWidget_2.rowCount()):
+            for j in range(self.ui.tableWidget_2.columnCount()):
+                text = str(self.ui.tableWidget_2.item(i, j).text())
+                if(text!='0'):
+                    text = text[0:len(text)-2]
+                cellref = sheet.cell(i+2,j+2)
+                cellref.value = int(text)
+                cellref.font = Font(size="8", name='Arial')
+                cellref.alignment = Alignment(horizontal='center',vertical='center')
+                cellref.number_format = '0'
 
 class ChooseFilter(QtWidgets.QDialog):
 

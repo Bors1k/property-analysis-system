@@ -21,6 +21,9 @@ class Ui_Dialog(object):
         Dialog.setMaximumSize(QtCore.QSize(382, 152))
         Dialog.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         Dialog.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/roskazna.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         Dialog.setStyleSheet("background-color: #444444;\n"
 "color: white;")
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
@@ -45,7 +48,9 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label_4.setText(_translate("Dialog", "Конвертер ведомости учета имущества - Version: 1.1"))
+        self.label_4.setText(_translate("Dialog", "Конвертер ведомости учета имущества - Version: 1.2"))
         self.label_2.setText(_translate("Dialog", "Разработали сотрудники Отдела информационных систем:"))
         self.label_5.setText(_translate("Dialog", "Специалист 1 разряда Шилкин Юрий Викторович"))
         self.label.setText(_translate("Dialog", "Инспектор-делопроизводитель Новиков Михаил Александрович"))
+        
+import images_qr

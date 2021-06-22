@@ -15,6 +15,9 @@ class Ui_Dialog_ChooseFilter(object):
     def setupUi(self, Dialog_ChooseFilter):
         Dialog_ChooseFilter.setObjectName("Dialog_ChooseFilter")
         Dialog_ChooseFilter.resize(417, 250)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/roskazna.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog_ChooseFilter.setWindowIcon(icon)
         Dialog_ChooseFilter.setStyleSheet("#Dialog_ChooseFilter {background-color: rgba(254,214,0,200)}\\n\n"
 ".QPushButton {background-color: rgba(143, 144, 146, 200)}\\n\n"
 ".QPushButton:hover{ background-color: rgba(143, 144, 146, 250)}")
@@ -38,3 +41,5 @@ class Ui_Dialog_ChooseFilter(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog_ChooseFilter.setWindowTitle(_translate("Dialog_ChooseFilter", "Выбор объектов для анализа"))
         self.pushButton.setText(_translate("Dialog_ChooseFilter", "Добавить"))
+        
+import images_qr

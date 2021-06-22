@@ -3,8 +3,8 @@ class Shipment:
 
     def __init__(self,name):
         self.name = name
-        self.shipCount = 0
-        self.expiredShipCount = 0
+        self.shipCount: int = 0
+        self.expiredShipCount: int = 0
 
 
     def getName(self):
