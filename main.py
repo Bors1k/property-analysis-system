@@ -222,7 +222,7 @@ class MyThread(QThread):
             self.my_window.ui.tableWidget.setItem(
                 schet, 0, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
-            if cell.value != None:
+            if cell.value != None and cell.value != 'Отдел':
                 self.mnozh.add(cell.value)
         schet = 0
         for cell in ws['B']:
@@ -265,6 +265,11 @@ class MyThread(QThread):
 
         self.my_window.wb.save(
             'C:\Windows\Temp\Сводный перечень имущества.xlsx')
+
+        self.my_window.ui.pushButton.setEnabled(True)
+        self.my_window.ui.pushButton_5.setEnabled(True)
+        self.my_window.ui.pushButton_6.setEnabled(True)
+        self.my_window.ui.pushButton_7.setEnabled(True)
 
         ws.auto_filter.ref = ws.dimensions
         self.my_window.ui.statusbar.showMessage('Таблица сконвертирована')
@@ -313,6 +318,10 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_5.clicked.connect(self.resetAnalyz)
         self.ui.pushButton_6.clicked.connect(self.openChooseOtdelFilters)
         self.ui.pushButton_7.clicked.connect(self.startAnalyz)
+        self.ui.pushButton.setEnabled(False)
+        self.ui.pushButton_5.setEnabled(False)
+        self.ui.pushButton_6.setEnabled(False)
+        self.ui.pushButton_7.setEnabled(False)
 
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
@@ -421,7 +430,7 @@ class MyWindow(QtWidgets.QMainWindow):
         if(len(self.wb.sheetnames)==1):
             sheet = self.wb.create_sheet('Аналитика по отделам')
         else:
-            sheet = self.wb[self.wb.sheetname[1]]
+            sheet = self.wb[self.wb.sheetnames[1]]
             
         k = 0.9
         maxWidth = 0
@@ -453,6 +462,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 cellref.font = Font(size="8", name='Arial')
                 cellref.alignment = Alignment(horizontal='center',vertical='center')
                 cellref.number_format = '0'
+
 
 class ChooseFilter(QtWidgets.QDialog):
 
