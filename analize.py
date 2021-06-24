@@ -92,8 +92,11 @@ class Analyze:
                         if(value.lower() in self.dict_imushestvo[x]):
                             for key in choose_position_header:
                                 if(choose_position_header[key]==choose_position[value]):
-                                    shipment = Shipment(key)
-                                    item.addNewShipment(item.shipments,shipment,self.dict_kolvo[x],self.dict_srok_previshenia[x])
+                                    if 'стол' in choose_position_header[key] and 'настол' in self.dict_imushestvo[x]:
+                                        pass
+                                    else:
+                                        shipment = Shipment(key)
+                                        item.addNewShipment(item.shipments,shipment,self.dict_kolvo[x],self.dict_srok_previshenia[x])
 
         return self.otdels
 
