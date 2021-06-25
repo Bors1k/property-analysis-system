@@ -38,7 +38,7 @@ class Ui_MainWindow(object):
         self.pushButton_2.setStyleSheet(".QPushButton {background-color: rgba(143, 144, 146, 80)}\n"
 ".QPushButton:hover{ background-color: rgba(143, 144, 146, 130)}")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("open.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/open.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_2.setIcon(icon)
         self.pushButton_2.setIconSize(QtCore.QSize(30, 30))
         self.pushButton_2.setObjectName("pushButton_2")
@@ -48,7 +48,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.setStyleSheet(".QPushButton {background-color: rgba(143, 144, 146, 80)}\n"
 ".QPushButton:hover{ background-color: rgba(143, 144, 146, 130)}")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_3.setIcon(icon1)
         self.pushButton_3.setIconSize(QtCore.QSize(30, 30))
         self.pushButton_3.setObjectName("pushButton_3")
@@ -103,7 +103,7 @@ class Ui_MainWindow(object):
         self.pushButton_6.setStyleSheet(".QPushButton {background-color: rgba(255, 210, 3, 130)}\n"
 ".QPushButton:hover{ background-color: rgba(255, 210, 3, 50)}")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("plus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/plus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_6.setIcon(icon2)
         self.pushButton_6.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_6.setObjectName("pushButton_6")
@@ -134,7 +134,7 @@ class Ui_MainWindow(object):
         self.pushButton_5.setStyleSheet(".QPushButton {background-color: rgba(255, 210, 3, 130)}\n"
 ".QPushButton:hover{ background-color: rgba(255, 210, 3, 50)}")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("sbros.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/sbros.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_5.setIcon(icon4)
         self.pushButton_5.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_5.setObjectName("pushButton_5")
