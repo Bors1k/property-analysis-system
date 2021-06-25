@@ -439,17 +439,21 @@ class MyWindow(QtWidgets.QMainWindow):
             text = self.ui.tableWidget_2.verticalHeaderItem(i).text()
             cellref.value = text
             cellref.font = Font(size="8", name='Arial')
-            cellref.alignment = Alignment(horizontal='center',vertical='center')
+            cellref.alignment = Alignment(horizontal='center', vertical='center')
             if(maxWidth<len(text) * k):
                 maxWidth = len(text) * k
             sheet.column_dimensions[cellref.column_letter].width = maxWidth
 
+        sheet['A1'] = 'Отдел'
+        sheet['A1'].font = Font(bold=True, size="8", name='Arial')
+        sheet['A1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
         for j in range(self.ui.tableWidget_2.columnCount()):
             cellref = sheet.cell(1,j+2)
             text = self.ui.tableWidget_2.horizontalHeaderItem(j).text()
             cellref.value = text
-            cellref.font = Font(size="8", name='Arial')
-            cellref.alignment = Alignment(horizontal='center',vertical='center')
+            cellref.font = Font(bold=True, size="8", name='Arial')
+            cellref.alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
             sheet.column_dimensions[cellref.column_letter].width = len(text) * k
 
         for i in range(self.ui.tableWidget_2.rowCount()):
@@ -462,6 +466,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 cellref.font = Font(size="8", name='Arial')
                 cellref.alignment = Alignment(horizontal='center',vertical='center')
                 cellref.number_format = '0'
+
 
 class ChooseFilter(QtWidgets.QDialog):
 
