@@ -1,12 +1,6 @@
-from otdel import Otdel
-from shipment import Shipment
-import xlwings
+from classes.shipment import Shipment
 import xlwings as xw
-import os
-from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QTableWidgetItem
-from dicts import choose_position, choose_position_header
+from classes.dicts import choose_position, choose_position_header
 
 
 class Analyze:

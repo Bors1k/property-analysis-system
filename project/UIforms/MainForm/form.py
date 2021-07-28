@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+import assets.images_qr 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):

@@ -1,6 +1,5 @@
-from shipment import Shipment
+from classes.shipment import Shipment
 # класс отдела
-
 
 class Otdel:
 

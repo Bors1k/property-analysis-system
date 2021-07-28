@@ -53,4 +53,4 @@ class Ui_Dialog(object):
         self.label_5.setText(_translate("Dialog", "Специалист 1 разряда Шилкин Юрий Викторович"))
         self.label.setText(_translate("Dialog", "Инспектор-делопроизводитель Новиков Михаил Александрович"))
         
-import images_qr
+import assets.images_qr 

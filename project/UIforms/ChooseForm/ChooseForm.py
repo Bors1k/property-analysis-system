@@ -47,4 +47,6 @@ class Choose_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-import images_qr
+        
+import assets.images_qr 
+

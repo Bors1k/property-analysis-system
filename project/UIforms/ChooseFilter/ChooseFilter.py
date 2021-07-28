@@ -42,4 +42,5 @@ class Ui_Dialog_ChooseFilter(object):
         Dialog_ChooseFilter.setWindowTitle(_translate("Dialog_ChooseFilter", "Выбор объектов для анализа"))
         self.pushButton.setText(_translate("Dialog_ChooseFilter", "Добавить"))
         
-import images_qr
+import assets.images_qr 
+
