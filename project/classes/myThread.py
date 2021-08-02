@@ -2,13 +2,15 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import QThread
 from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox
 
-import openpyxl 
+import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 
 from classes.dicts import lifetime
+from classes.dicts import spravochnik
 
 import re
+
 
 class MyThread(QThread):
     showMessageBox = QtCore.pyqtSignal(list)
@@ -68,8 +70,16 @@ class MyThread(QThread):
             else:
                 if name_sheet['C' + str(n)].value is None:
                     znach = cell.value
+                    if cell.value is not None:
+                        for key, value in spravochnik.items():
+                            if znach in key:
+                                znach = value
                 else:
                     znach = cell.value
+                    if cell.value is not None:
+                        for key, value in spravochnik.items():
+                            if znach in key:
+                                znach = value
                     ws['A' + str(k)] = znach
                     ws['A' + str(k)].font = Font(size="8", name='Arial')
                     ws['A' + str(k)].alignment = Alignment(horizontal='center',
