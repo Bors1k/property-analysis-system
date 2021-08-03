@@ -148,6 +148,23 @@ class MyThread(QThread):
                                                    vertical='center')
             ws['H' + str(k)].number_format = '0.0'
 
+            ws['I' + str(k)] = "=E" + str(k) + "+" + "G" + str(k) + "*365"
+            ws['I' + str(k)].font = Font(size="8", name='Arial')
+            ws['I' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
+            ws['I' + str(k)].number_format = 'DD.mm.YYYY'
+
+            ws['J' + str(k)] = "=TEXT(I" + str(k) + ",\"гггг\")"
+            ws['J' + str(k)].font = Font(size="8", name='Arial')
+            ws['J' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
+
+            ws['K' + str(k)] = "=IF(J" + str(k) + "<=\"2022\""  + ",\"да\"" + ",\"нет\")"
+            ws['K' + str(k)].font = Font(size="8", name='Arial')
+            ws['K' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
+            
+
             for key in lifetime:
                 if key.lower() in str(cell.value).lower():
                     ws['G' + str(k)] = lifetime[key]
@@ -167,6 +184,9 @@ class MyThread(QThread):
         ws.column_dimensions['E'].width = 14.5
         ws.column_dimensions['F'].width = 14.5
         ws.column_dimensions['H'].width = 24
+        ws.column_dimensions['I'].width = 24
+        ws.column_dimensions['J'].width = 14.5
+        ws.column_dimensions['K'].width = 14.5
 
         ws['A1'] = 'Отдел'
         ws['A1'].font = Font(bold=True, size="10", name='Arial')
@@ -199,6 +219,18 @@ class MyThread(QThread):
         ws['H1'] = 'Срок превышен, лет'
         ws['H1'].font = Font(bold=True, size="10", name='Arial')
         ws['H1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
+        ws['I1'] = 'Срок годности для неистекших (из расчета 365 дней в году)'
+        ws['I1'].font = Font(bold=True, size="10", name='Arial')
+        ws['I1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
+        ws['J1'] = 'Год истечения срока годности'
+        ws['J1'].font = Font(bold=True, size="10", name='Arial')
+        ws['J1'].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
+        ws['K1'] = 'Истекает к концу 2022 года'
+        ws['K1'].font = Font(bold=True, size="10", name='Arial')
+        ws['K1'].alignment = Alignment(
             wrap_text=True, horizontal='center', vertical='center')
 
         self.my_window.ui.tableWidget.setColumnCount(ws.max_column)
