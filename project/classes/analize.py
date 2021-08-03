@@ -11,6 +11,7 @@ class Analyze:
         self.dict_imushestvo = {}
         self.dict_kolvo = {}
         self.dict_srok_previshenia = {}
+        self.dict_expired_in_next_year = {}
         self.otdels = []
         self.znach = []
 
@@ -76,6 +77,16 @@ class Analyze:
             self.dict_srok_previshenia[k] = str(value).lower()
             k = k + 1
 
+        # Получаем все значения столбца K и записываем их в словарь
+        result_znach = sh.range('K2:' + 'K' + str(self.rownum)).value
+        k = 2
+        for value in result_znach:
+            if(str(value).lower() == 'да'):
+                self.dict_expired_in_next_year[k] = True
+            else:
+                self.dict_expired_in_next_year[k] = False
+            k = k + 1
+
 
         wbxl.close()
 
@@ -90,7 +101,7 @@ class Analyze:
                                         pass
                                     else:
                                         shipment = Shipment(key)
-                                        item.addNewShipment(item.shipments,shipment,self.dict_kolvo[x],self.dict_srok_previshenia[x])
+                                        item.addNewShipment(item.shipments,shipment,self.dict_kolvo[x],self.dict_srok_previshenia[x],self.dict_expired_in_next_year[x])
 
         return self.otdels
 
