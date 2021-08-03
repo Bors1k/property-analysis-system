@@ -1,4 +1,5 @@
 from PyQt5 import QtWidgets
+import datetime
 
 from UIforms.ChooseFilter.ChooseFilter import Ui_Dialog_ChooseFilter
 
@@ -39,6 +40,7 @@ class ChooseFilter(QtWidgets.QDialog):
                 if(value == val):
                     self.vivod_header.append(key)
                     self.vivod_header.append(choose_position_header_evry_two[key])
+                    self.vivod_header.append(choose_position_header_evry_two[key] + " в " + str(datetime.date.today().year + 1)  + " году")
                 
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
         self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(

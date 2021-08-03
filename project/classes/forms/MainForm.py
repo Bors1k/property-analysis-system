@@ -18,7 +18,7 @@ from classes.dicts import choose_position_header_evry_two
 
 from openpyxl.styles import Font, Alignment
 import openpyxl
-
+import datetime
 import os
 
 
@@ -164,7 +164,10 @@ class MyWindow(QtWidgets.QMainWindow):
                                 self.ui.tableWidget_2.setItem(
                                     i, j, QTableWidgetItem(str(ship.expiredShipCount)))
                                 tempFlag = True
-
+                            if((choose_position_header_evry_two[ship.name] + " в " + str(datetime.date.today().year + 1)  + " году") == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
+                                self.ui.tableWidget_2.setItem(
+                                    i, j, QTableWidgetItem(str(ship.expiredInNextYearCount)))
+                                tempFlag = True
                         if(tempFlag == False):
                             self.ui.tableWidget_2.setItem(
                                 i, j, QTableWidgetItem(str(0)))
