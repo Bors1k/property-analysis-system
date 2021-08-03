@@ -204,7 +204,7 @@ class MyThread(QThread):
         ws['D1'].font = Font(bold=True, size="10", name='Arial')
         ws['D1'].alignment = Alignment(
             wrap_text=True, horizontal='center', vertical='center')
-        ws['E1'] = 'Дата принятия к учету'
+        ws['E1'] = 'Дата ввода в эксплуатацию'
         ws['E1'].font = Font(bold=True, size="10", name='Arial')
         ws['E1'].alignment = Alignment(
             wrap_text=True, horizontal='center', vertical='center')

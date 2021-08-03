@@ -17,6 +17,7 @@ from classes.myThread import MyThread
 from classes.dicts import choose_position_header_evry_two
 
 from openpyxl.styles import Font, Alignment
+import openpyxl
 
 import os
 
@@ -175,6 +176,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
         k = 0.9
         maxWidth = 0
+
         for i in range(self.ui.tableWidget_2.rowCount()):
             cellref = sheet.cell(i+2, 1)
             text = self.ui.tableWidget_2.verticalHeaderItem(i).text()
@@ -197,8 +199,30 @@ class MyWindow(QtWidgets.QMainWindow):
             cellref.font = Font(bold=True, size="8", name='Arial')
             cellref.alignment = Alignment(
                 wrap_text=True, horizontal='center', vertical='center')
-            sheet.column_dimensions[cellref.column_letter].width = len(
-                text) * k
+            sheet.column_dimensions[cellref.column_letter].width = 8.43
+            
+            # len(
+            #     text) * k
+
+        tumbler = 0
+        for row_cells in sheet.iter_rows():
+            tumbler = 0
+            for cell in row_cells:
+                if cell.value == 'Аппарат Управления':
+                    tumbler = 1
+                if cell.value == 'Склад':
+                    tumbler = 2
+                if tumbler == 1:
+                    my_red = openpyxl.styles.colors.Color(rgb='00B7DEE8')
+                    my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
+                    cell.fill = my_fill   
+                if tumbler == 2:
+                    my_red = openpyxl.styles.colors.Color(rgb='00EBF1DE')
+                    my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
+                    cell.fill = my_fill  
+
+
+
 
         for i in range(self.ui.tableWidget_2.rowCount()):
             for j in range(self.ui.tableWidget_2.columnCount()):
