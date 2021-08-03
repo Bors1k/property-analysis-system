@@ -216,6 +216,17 @@ class MyThread(QThread):
             schet = schet + 1
             if cell.value != None and cell.value != 'Отдел':
                 self.mnozh.add(cell.value)
+
+            if cell.value == 'Аппарат Управления':
+                my_red = openpyxl.styles.colors.Color(rgb='00B7DEE8')
+                my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
+                cell.fill = my_fill
+
+            if cell.value == 'Склад':
+                my_red = openpyxl.styles.colors.Color(rgb='00EBF1DE')
+                my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
+                cell.fill = my_fill    
+
         schet = 0
         for cell in ws['B']:
             self.my_window.ui.tableWidget.setItem(
