@@ -194,6 +194,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
 
         # Колонки снизу
+        z_row = sheet.max_row
         s_row = sheet.max_row + 1
         e_row = s_row + 1
         sheet['A'+ str(s_row)] = 'Суммы для справки'
@@ -235,10 +236,22 @@ class MyWindow(QtWidgets.QMainWindow):
                     my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
                     cell.fill = my_fill  
 
+        for i in range(self.ui.tableWidget_2.rowCount()):
+            for j in range(self.ui.tableWidget_2.columnCount()):
+                text = str(self.ui.tableWidget_2.item(i, j).text())
+                if(text != '0'):
+                    text = text[0:len(text)-2]
+                cellref = sheet.cell(i+2, j+2)
+                cellref.value = int(text)
+                cellref.font = Font(size="8", name='Arial')
+                cellref.alignment = Alignment(
+                    horizontal='center', vertical='center')
+                cellref.number_format = '0'
 
         tumbler_two = 1
         # for j in range(sheet.max_column):
         #     # print(get_column_letter(j+2))
+        finish_formula = "=AVERAGE("
         for j in range(self.ui.tableWidget_2.columnCount()):    
             text = self.ui.tableWidget_2.horizontalHeaderItem(j).text()
             if 'Количество' in text:
@@ -252,14 +265,27 @@ class MyWindow(QtWidgets.QMainWindow):
             sheet[get_column_letter(1)+ str(e_row + 2)] = 'Среднее значение превышения сроков эксплуатации движимого имущества %'
             if tumbler_two == 1:
                 sheet[get_column_letter(j+2)+ str(e_row)] = edited_text
+                summa = 0
+                for s in range(z_row):
+                    if s > 1:
+                        summa = summa + sheet[get_column_letter(j+2)+ str(s)].value
                 tumbler_two = 2
             elif tumbler_two == 2:
                 sheet[get_column_letter(j+2)+ str(e_row)] = 'с превыш. сроком'
+                if summa == 0:
+                    sheet[get_column_letter(j+2)+ str(e_row + 1)] = 0
+                else:
+                    sheet[get_column_letter(j+2)+ str(e_row + 1)] = "=SUM(" + get_column_letter(j+2) + "1" + ":" + get_column_letter(j+2) + str(s_row - 1)  +")/" + get_column_letter(j+1) + str(s_row) + "* 100"
                 sheet[get_column_letter(j+2)+ str(e_row + 2)] = '% с превыш. сроком'
                 tumbler_two = 3
             elif tumbler_two == 3:
                 sheet[get_column_letter(j+2)+ str(e_row)] = ' срок будет превышен в 2022'
+                if summa == 0:
+                    sheet[get_column_letter(j+2)+ str(e_row + 1)] = 0
+                else:
+                    sheet[get_column_letter(j+2)+ str(e_row + 1)] = "=SUM(" + get_column_letter(j+2) + "1" + ":" + get_column_letter(j+2) + str(s_row - 1)  +")/" + get_column_letter(j) + str(s_row) + "* 100"
                 sheet[get_column_letter(j+2)+ str(e_row + 2)] = '% срок будет превышен в 2022'
+                finish_formula = finish_formula + get_column_letter(j+2)+ str(e_row + 1) + ','
                 tumbler_two = 1
             sheet[get_column_letter(j+2)+ str(e_row)].font = Font(size="8", name='Arial')
             sheet[get_column_letter(j+2)+ str(e_row)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
@@ -267,18 +293,28 @@ class MyWindow(QtWidgets.QMainWindow):
             sheet[get_column_letter(j+2)+ str(e_row + 2)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
             sheet[get_column_letter(1)+ str(e_row + 2)].font = Font(bold=True, size="8", name='Arial')
             sheet[get_column_letter(1)+ str(e_row + 2)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+            sheet[get_column_letter(j+2)+ str(e_row + 1)].font = Font(bold=True, size="8", name='Arial')
+            sheet[get_column_letter(j+2)+ str(e_row + 1)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+            # sheet[get_column_letter(1)+ str(e_row + 3)] = finish_formula
+            sheet[get_column_letter(1)+ str(e_row + 3)].font = Font(bold=True, size="8", name='Arial')
+            sheet[get_column_letter(1)+ str(e_row + 3)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
 
+        finish_formula = finish_formula[0:-1]
+        finish_formula = finish_formula + ")"
+        print(finish_formula)
+        sheet[get_column_letter(1)+ str(e_row + 3)] = finish_formula
         sheet.row_dimensions[e_row].hight = 49
         sheet.row_dimensions[e_row + 2].hight = 95
 
-        for i in range(self.ui.tableWidget_2.rowCount()):
-            for j in range(self.ui.tableWidget_2.columnCount()):
-                text = str(self.ui.tableWidget_2.item(i, j).text())
-                if(text != '0'):
-                    text = text[0:len(text)-2]
-                cellref = sheet.cell(i+2, j+2)
-                cellref.value = int(text)
-                cellref.font = Font(size="8", name='Arial')
-                cellref.alignment = Alignment(
-                    horizontal='center', vertical='center')
-                cellref.number_format = '0'
+        # for i in range(self.ui.tableWidget_2.rowCount()):
+        #     for j in range(self.ui.tableWidget_2.columnCount()):
+        #         text = str(self.ui.tableWidget_2.item(i, j).text())
+        #         if(text != '0'):
+        #             text = text[0:len(text)-2]
+        #         cellref = sheet.cell(i+2, j+2)
+        #         cellref.value = int(text)
+        #         cellref.font = Font(size="8", name='Arial')
+        #         cellref.alignment = Alignment(
+        #             horizontal='center', vertical='center')
+        #         cellref.number_format = '0'
+
