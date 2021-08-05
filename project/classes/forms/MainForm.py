@@ -16,6 +16,7 @@ from classes import analize
 from classes.myThread import MyThread
 from classes.dicts import choose_position_header_evry_two
 
+from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment
 import openpyxl
 import datetime
@@ -191,6 +192,16 @@ class MyWindow(QtWidgets.QMainWindow):
                 maxWidth = len(text) * k
             sheet.column_dimensions[cellref.column_letter].width = maxWidth
 
+
+        # Колонки снизу
+        s_row = sheet.max_row + 1
+        e_row = s_row + 1
+        sheet['A'+ str(s_row)] = 'Суммы для справки'
+        sheet['A'+ str(s_row)].font = Font(bold=True, size="8", name='Arial')
+        sheet['A'+ str(s_row)].alignment = Alignment(
+            wrap_text=True, horizontal='center', vertical='center')
+        sheet.merge_cells(start_row=s_row, start_column=1, end_row=e_row, end_column=1)
+        
         sheet['A1'] = 'Отдел'
         sheet['A1'].font = Font(bold=True, size="8", name='Arial')
         sheet['A1'].alignment = Alignment(
@@ -203,7 +214,7 @@ class MyWindow(QtWidgets.QMainWindow):
             cellref.alignment = Alignment(
                 wrap_text=True, horizontal='center', vertical='center')
             sheet.column_dimensions[cellref.column_letter].width = 8.43
-            
+    
             # len(
             #     text) * k
 
@@ -225,7 +236,40 @@ class MyWindow(QtWidgets.QMainWindow):
                     cell.fill = my_fill  
 
 
+        tumbler_two = 1
+        # for j in range(sheet.max_column):
+        #     # print(get_column_letter(j+2))
+        for j in range(self.ui.tableWidget_2.columnCount()):    
+            text = self.ui.tableWidget_2.horizontalHeaderItem(j).text()
+            if 'Количество' in text:
+                edited_text = text.replace("Количество", "Всего")
+                # print(edited_text)
 
+            sheet[get_column_letter(j+2)+ str(s_row)] = "=SUM(" + get_column_letter(j+2) + "1" + ":" + get_column_letter(j+2) + str(s_row - 1)  +")"
+            sheet[get_column_letter(j+2)+ str(s_row)].font = Font(size="8", name='Arial')
+            sheet[get_column_letter(j+2)+ str(s_row)].alignment = Alignment(horizontal='center', vertical='center')
+            sheet[get_column_letter(j+2)+ str(s_row)].font = Font(bold=True, size="8", name='Arial')
+            sheet[get_column_letter(1)+ str(e_row + 2)] = 'Среднее значение превышения сроков эксплуатации движимого имущества %'
+            if tumbler_two == 1:
+                sheet[get_column_letter(j+2)+ str(e_row)] = edited_text
+                tumbler_two = 2
+            elif tumbler_two == 2:
+                sheet[get_column_letter(j+2)+ str(e_row)] = 'с превыш. сроком'
+                sheet[get_column_letter(j+2)+ str(e_row + 2)] = '% с превыш. сроком'
+                tumbler_two = 3
+            elif tumbler_two == 3:
+                sheet[get_column_letter(j+2)+ str(e_row)] = ' срок будет превышен в 2022'
+                sheet[get_column_letter(j+2)+ str(e_row + 2)] = '% срок будет превышен в 2022'
+                tumbler_two = 1
+            sheet[get_column_letter(j+2)+ str(e_row)].font = Font(size="8", name='Arial')
+            sheet[get_column_letter(j+2)+ str(e_row)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+            sheet[get_column_letter(j+2)+ str(e_row + 2)].font = Font(size="8", name='Arial')
+            sheet[get_column_letter(j+2)+ str(e_row + 2)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+            sheet[get_column_letter(1)+ str(e_row + 2)].font = Font(bold=True, size="8", name='Arial')
+            sheet[get_column_letter(1)+ str(e_row + 2)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
+
+        sheet.row_dimensions[e_row].hight = 49
+        sheet.row_dimensions[e_row + 2].hight = 95
 
         for i in range(self.ui.tableWidget_2.rowCount()):
             for j in range(self.ui.tableWidget_2.columnCount()):
