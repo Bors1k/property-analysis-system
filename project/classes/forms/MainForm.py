@@ -16,6 +16,8 @@ from classes import analize
 from classes.myThread import MyThread
 from classes.dicts import choose_position_header_evry_two
 
+
+from openpyxl.styles.borders import BORDER_MEDIUM, Border, Side, BORDER_THIN
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment
 import openpyxl
@@ -181,6 +183,83 @@ class MyWindow(QtWidgets.QMainWindow):
         k = 0.9
         maxWidth = 0
 
+        all_border = Border(
+            left=Side(border_style=BORDER_THIN, color='00000000'),
+            right=Side(border_style=BORDER_MEDIUM, color='00000000'),
+            top=Side(border_style=BORDER_THIN, color='00000000'),
+            bottom=Side(border_style=BORDER_THIN, color='00000000')
+        )
+
+        all_border_down_r = Border(
+            left=Side(border_style=BORDER_THIN, color='00000000'),
+            right=Side(border_style=BORDER_MEDIUM, color='00000000'),
+            top=Side(border_style=BORDER_THIN, color='00000000'),
+            bottom=Side(border_style=BORDER_MEDIUM, color='00000000')
+        )
+
+        all_border_small = Border(
+            left=Side(border_style=BORDER_THIN, color='00000000'),
+            right=Side(border_style=BORDER_THIN, color='00000000'),
+            top=Side(border_style=BORDER_THIN, color='00000000'),
+            bottom=Side(border_style=BORDER_THIN, color='00000000')
+        )
+
+        all_border_left = Border(
+            left=Side(border_style=BORDER_MEDIUM, color='00000000'),
+            right=Side(border_style=BORDER_THIN, color='00000000'),
+            top=Side(border_style=BORDER_THIN, color='00000000'),
+            bottom=Side(border_style=BORDER_THIN, color='00000000')
+        )
+
+        all_border_left_down = Border(
+            left=Side(border_style=BORDER_MEDIUM, color='00000000'),
+            right=Side(border_style=BORDER_THIN, color='00000000'),
+            top=Side(border_style=BORDER_THIN, color='00000000'),
+            bottom=Side(border_style=BORDER_MEDIUM, color='00000000')
+        )
+
+        right_border = Border(
+            left=Side(border_style=None, color='00000000'),
+            right=Side(border_style=BORDER_MEDIUM, color='00000000'),
+            top=Side(border_style=None, color='00000000'),
+            bottom=Side(border_style=None, color='00000000')
+        )
+
+        right_bottom_border = Border(
+            left=Side(border_style=None, color='00000000'),
+            right=Side(border_style=BORDER_MEDIUM, color='00000000'),
+            top=Side(border_style=None, color='00000000'),
+            bottom=Side(border_style=BORDER_THIN, color='00000000')
+        )
+
+        right_bottom_border_medium = Border(
+            left=Side(border_style=None, color='00000000'),
+            right=Side(border_style=BORDER_MEDIUM, color='00000000'),
+            top=Side(border_style=None, color='00000000'),
+            bottom=Side(border_style=BORDER_MEDIUM, color='00000000')
+        )
+
+        right_bottom_border_medium_down = Border(
+            left=Side(border_style=None, color='00000000'),
+            right=Side(border_style=BORDER_THIN, color='00000000'),
+            top=Side(border_style=None, color='00000000'),
+            bottom=Side(border_style=BORDER_MEDIUM, color='00000000')
+        )
+
+        bottom_border_small = Border(
+            left=Side(border_style=None, color='00000000'),
+            right=Side(border_style=None, color='00000000'),
+            top=Side(border_style=None, color='00000000'),
+            bottom=Side(border_style=BORDER_THIN, color='00000000')
+        )
+
+        bottom_border_large = Border(
+            left=Side(border_style=None, color='00000000'),
+            right=Side(border_style=None, color='00000000'),
+            top=Side(border_style=None, color='00000000'),
+            bottom=Side(border_style=BORDER_MEDIUM, color='00000000')
+        )
+
         for i in range(self.ui.tableWidget_2.rowCount()):
             cellref = sheet.cell(i+2, 1)
             text = self.ui.tableWidget_2.verticalHeaderItem(i).text()
@@ -191,19 +270,21 @@ class MyWindow(QtWidgets.QMainWindow):
             if(maxWidth < len(text) * k):
                 maxWidth = len(text) * k
             sheet.column_dimensions[cellref.column_letter].width = maxWidth
-
+            cellref.border = all_border
 
         # Колонки снизу
         z_row = sheet.max_row
         s_row = sheet.max_row + 1
         e_row = s_row + 1
         sheet['A'+ str(s_row)] = 'Суммы для справки'
+        sheet['A'+ str(s_row)].border = right_bottom_border
         sheet['A'+ str(s_row)].font = Font(bold=True, size="8", name='Arial')
         sheet['A'+ str(s_row)].alignment = Alignment(
             wrap_text=True, horizontal='center', vertical='center')
         sheet.merge_cells(start_row=s_row, start_column=1, end_row=e_row, end_column=1)
         
-        sheet['A1'] = 'Отдел'
+        sheet['A1'] = 'Наименование структурного подразделения'
+        sheet['A1'].border = right_bottom_border
         sheet['A1'].font = Font(bold=True, size="8", name='Arial')
         sheet['A1'].alignment = Alignment(
             wrap_text=True, horizontal='center', vertical='center')
@@ -211,13 +292,11 @@ class MyWindow(QtWidgets.QMainWindow):
             cellref = sheet.cell(1, j+2)
             text = self.ui.tableWidget_2.horizontalHeaderItem(j).text()
             cellref.value = text
+            cellref.border = bottom_border_small
             cellref.font = Font(bold=True, size="8", name='Arial')
             cellref.alignment = Alignment(
                 wrap_text=True, horizontal='center', vertical='center')
             sheet.column_dimensions[cellref.column_letter].width = 8.43
-    
-            # len(
-            #     text) * k
 
         tumbler = 0
         for row_cells in sheet.iter_rows():
@@ -249,14 +328,11 @@ class MyWindow(QtWidgets.QMainWindow):
                 cellref.number_format = '0'
 
         tumbler_two = 1
-        # for j in range(sheet.max_column):
-        #     # print(get_column_letter(j+2))
         finish_formula = "=AVERAGE("
         for j in range(self.ui.tableWidget_2.columnCount()):    
             text = self.ui.tableWidget_2.horizontalHeaderItem(j).text()
             if 'Количество' in text:
                 edited_text = text.replace("Количество", "Всего")
-                # print(edited_text)
 
             sheet[get_column_letter(j+2)+ str(s_row)] = "=SUM(" + get_column_letter(j+2) + "1" + ":" + get_column_letter(j+2) + str(s_row - 1)  +")"
             sheet[get_column_letter(j+2)+ str(s_row)].font = Font(size="8", name='Arial')
@@ -287,6 +363,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 sheet[get_column_letter(j+2)+ str(e_row + 2)] = '% срок будет превышен в 2022'
                 finish_formula = finish_formula + get_column_letter(j+2)+ str(e_row + 1) + ','
                 tumbler_two = 1
+
             sheet[get_column_letter(j+2)+ str(e_row)].font = Font(size="8", name='Arial')
             sheet[get_column_letter(j+2)+ str(e_row)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
             sheet[get_column_letter(j+2)+ str(e_row + 2)].font = Font(size="8", name='Arial')
@@ -299,22 +376,48 @@ class MyWindow(QtWidgets.QMainWindow):
             sheet[get_column_letter(1)+ str(e_row + 3)].font = Font(bold=True, size="8", name='Arial')
             sheet[get_column_letter(1)+ str(e_row + 3)].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
 
+        for l in range(sheet.max_column):
+            if l > 2:
+                sheet.cell(1, l).border = all_border_small
+                sheet.cell(s_row, l).border = all_border_small
+                sheet.cell(e_row, l).border = right_bottom_border_medium_down
+
+        for s in range(s_row):
+
+            t = 1
+            for l in range(sheet.max_column + 1):
+                if s > 1 and l > 1:
+                    if t == 1:
+                        sheet.cell(s, l).border = all_border_left
+                        t = 2
+                    elif t == 2:
+                        sheet.cell(s, l).border = all_border_small
+                        sheet.cell(e_row + 1, l).border = all_border_left
+                        sheet.cell(e_row + 2, l).border = all_border_left_down
+                        t = 3
+                    elif t == 3:
+                        sheet.cell(s, l).border = all_border
+                        sheet.cell(e_row + 1, l).border = all_border
+                        sheet.cell(e_row + 2, l).border = all_border_down_r
+                        sheet.cell(s_row, l).border = all_border
+                        sheet.cell(e_row, l).border = all_border_down_r
+                    
+                        t = 1
+
+        # for l in range(sheet.max_column):
+        #     if l > 2:
+        #         sheet.cell(1, l).border = all_border_small
+        #         sheet.cell(s_row, l).border = all_border_small
+        #         sheet.cell(e_row, l).border = right_bottom_border_medium_down
+
+        sheet.cell(s_row, sheet.max_column).border = all_border
+        sheet.cell(e_row, sheet.max_column).border = right_bottom_border_medium
+        sheet.cell(e_row, 2).border = all_border_left_down
+        
+
         finish_formula = finish_formula[0:-1]
         finish_formula = finish_formula + ")"
-        print(finish_formula)
         sheet[get_column_letter(1)+ str(e_row + 3)] = finish_formula
         sheet.row_dimensions[e_row].hight = 49
         sheet.row_dimensions[e_row + 2].hight = 95
-
-        # for i in range(self.ui.tableWidget_2.rowCount()):
-        #     for j in range(self.ui.tableWidget_2.columnCount()):
-        #         text = str(self.ui.tableWidget_2.item(i, j).text())
-        #         if(text != '0'):
-        #             text = text[0:len(text)-2]
-        #         cellref = sheet.cell(i+2, j+2)
-        #         cellref.value = int(text)
-        #         cellref.font = Font(size="8", name='Arial')
-        #         cellref.alignment = Alignment(
-        #             horizontal='center', vertical='center')
-        #         cellref.number_format = '0'
 

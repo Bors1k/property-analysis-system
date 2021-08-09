@@ -249,15 +249,32 @@ class MyThread(QThread):
             if cell.value != None and cell.value != 'Отдел':
                 self.mnozh.add(cell.value)
 
-            if cell.value == 'Аппарат Управления':
-                my_red = openpyxl.styles.colors.Color(rgb='00B7DEE8')
-                my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
-                cell.fill = my_fill
+            # if cell.value == 'Аппарат Управления':
+            #     my_red = openpyxl.styles.colors.Color(rgb='00B7DEE8')
+            #     my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
+            #     cell.fill = my_fill
 
-            if cell.value == 'Склад':
-                my_red = openpyxl.styles.colors.Color(rgb='00EBF1DE')
-                my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
-                cell.fill = my_fill    
+            # if cell.value == 'Склад':
+            #     my_red = openpyxl.styles.colors.Color(rgb='00EBF1DE')
+            #     my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
+            #     cell.fill = my_fill    
+
+        tumbler = 0
+        for row_cells in ws.iter_rows():
+            tumbler = 0
+            for cell in row_cells:
+                if cell.value == 'Аппарат Управления':
+                    tumbler = 1
+                if cell.value == 'Склад':
+                    tumbler = 2
+                if tumbler == 1:
+                    my_red = openpyxl.styles.colors.Color(rgb='00B7DEE8')
+                    my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
+                    cell.fill = my_fill   
+                if tumbler == 2:
+                    my_red = openpyxl.styles.colors.Color(rgb='00EBF1DE')
+                    my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
+                    cell.fill = my_fill  
 
         schet = 0
         for cell in ws['B']:
