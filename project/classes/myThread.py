@@ -237,7 +237,7 @@ class MyThread(QThread):
         self.my_window.ui.tableWidget.setHorizontalHeaderLabels(
             [str(ws['A1'].value), str(ws['B1'].value), str(ws['C1'].value),
              str(ws['D1'].value), str(ws['E1'].value), str(ws['F1'].value),
-             str(ws['G1'].value), str(ws['H1'].value)])
+             str(ws['G1'].value), str(ws['H1'].value), str(ws['I1'].value), str(ws['J1'].value), str(ws['K1'].value)])
 
         self.my_window.ui.tableWidget.setRowCount(ws.max_row)
 
@@ -311,6 +311,21 @@ class MyThread(QThread):
         for cell in ws['H']:
             self.my_window.ui.tableWidget.setItem(
                 schet, 7, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0   
+        for cell in ws['I']:
+            self.my_window.ui.tableWidget.setItem(
+                schet, 8, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0   
+        for cell in ws['J']:
+            self.my_window.ui.tableWidget.setItem(
+                schet, 9, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+        schet = 0   
+        for cell in ws['K']:
+            self.my_window.ui.tableWidget.setItem(
+                schet, 10, QTableWidgetItem(str(cell.value)))
             schet = schet + 1
 
         self.my_window.ui.tableWidget.resizeColumnsToContents()
