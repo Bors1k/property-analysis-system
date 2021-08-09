@@ -420,4 +420,5 @@ class MyWindow(QtWidgets.QMainWindow):
         sheet[get_column_letter(1)+ str(e_row + 3)] = finish_formula
         sheet.row_dimensions[e_row].hight = 49
         sheet.row_dimensions[e_row + 2].hight = 95
+        sheet.auto_filter.ref = sheet.dimensions
 
