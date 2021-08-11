@@ -342,7 +342,7 @@ class MyWindow(QtWidgets.QMainWindow):
             if tumbler_two == 1:
                 sheet[get_column_letter(j+2)+ str(e_row)] = edited_text
                 summa = 0
-                for s in range(z_row):
+                for s in range(z_row + 1):
                     if s > 1:
                         summa = summa + sheet[get_column_letter(j+2)+ str(s)].value
                 tumbler_two = 2
