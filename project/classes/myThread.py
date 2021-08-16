@@ -165,7 +165,7 @@ class MyThread(QThread):
                 
 
                 for key in lifetime:
-                    if key.lower() in str(cell.value).lower():
+                    if key.lower() in str(ws['B' + str(k)].value).lower():
                         ws['G' + str(k)] = lifetime[key]
 
                 ws['G' + str(k)].font = Font(size="8", name='Arial')
