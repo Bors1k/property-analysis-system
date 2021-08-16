@@ -24,8 +24,6 @@ class MyThread(QThread):
         self.mnozh = set()
         self.number_row = 1
         
-
-
     def zapoln_A(self, ws, name_sheet):
         n = 1
         if self.my_window.first:
@@ -179,57 +177,7 @@ class MyThread(QThread):
         if self.my_window.first is not True:
             ws.delete_rows(ws.max_row, 1)
 
-
-    def run(self):
-        self.my_window.ui.statusbar.showMessage(
-            'Анализ и сопоставление данных исходной таблицы')
-        self.my_window.ui.pushButton_2.setEnabled(False)
-        self.my_window.ui.pushButton_3.setEnabled(False)
-        wb = openpyxl.load_workbook(self.my_window.filename[0])
-        sheets = wb.sheetnames
-
-        try:
-            if len(sheets) == 1:
-                sheet = sheets[0]
-            else:
-                self.pause = True
-                self.showMessageBox.emit(sheets)
-                while self.pause:
-                    self.sleep(1)
-                sheet = self.my_window.ChoosedSheet
-                # sheet = sheets[2]
-        except Exception as ex:
-
-            messagebox = QMessageBox(
-                parent=self, text='Ошибка', detailedText=str(ex))
-            messagebox.setWindowTitle('Внимание!')
-            messagebox.setStyleSheet(
-                '.QPushButton{background-color: #444444;color: white;}')
-            messagebox.show()
-
-        name_sheet = wb[sheet]
-
-        if self.my_window.first:
-
-            self.my_window.wb = Workbook()
-            ws = self.my_window.wb.active
-            ws.title = "Сводный перечень имущества"
-        
-        else:
-            self.my_window.wb = openpyxl.load_workbook('C:\Windows\Temp\Сводный перечень имущества.xlsx')
-            ws = self.my_window.wb.active
-
-        ws.row_dimensions[1].ht = 39.6
-        self.zapoln_A(ws, name_sheet)
-        self.my_window.ui.statusbar.showMessage('Конвертация данных')
-        self.zapoln_B(ws, name_sheet)
-        self.zapoln_D(ws, name_sheet)
-        self.zapoln_E(ws, name_sheet)
-        self.zapoln_C(ws, name_sheet)
-        self.zapoln_F(ws, name_sheet)
-        self.my_window.ui.statusbar.showMessage('Последние штрихи')
-        self.zapoln_H_I_J_K_G(ws, name_sheet)
-
+    def style_cell(self, ws):
         ws.column_dimensions['A'].width = 20
         ws.column_dimensions['B'].width = 48
         ws.column_dimensions['C'].width = 7
@@ -240,6 +188,7 @@ class MyThread(QThread):
         ws.column_dimensions['I'].width = 24
         ws.column_dimensions['J'].width = 14.5
         ws.column_dimensions['K'].width = 14.5
+        ws.row_dimensions[1].ht = 39.6
 
         ws['A1'] = 'Отдел'
         ws['A1'].font = Font(bold=True, size="10", name='Arial')
@@ -286,22 +235,6 @@ class MyThread(QThread):
         ws['K1'].alignment = Alignment(
             wrap_text=True, horizontal='center', vertical='center')
 
-        self.my_window.ui.tableWidget.setColumnCount(ws.max_column)
-        self.my_window.ui.tableWidget.setHorizontalHeaderLabels(
-            [str(ws['A1'].value), str(ws['B1'].value), str(ws['C1'].value),
-             str(ws['D1'].value), str(ws['E1'].value), str(ws['F1'].value),
-             str(ws['G1'].value), str(ws['H1'].value), str(ws['I1'].value), str(ws['J1'].value), str(ws['K1'].value)])
-
-        self.my_window.ui.tableWidget.setRowCount(ws.max_row)
-
-        schet = 0
-        for cell in ws['A']:
-            self.my_window.ui.tableWidget.setItem(
-                schet, 0, QTableWidgetItem(str(cell.value)))
-            schet = schet + 1
-            if cell.value != None and cell.value != 'Отдел':
-                self.mnozh.add(cell.value)
-
         tumbler = 0
         for row_cells in ws.iter_rows():
             tumbler = 0
@@ -318,6 +251,24 @@ class MyThread(QThread):
                     my_red = openpyxl.styles.colors.Color(rgb='00EBF1DE')
                     my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
                     cell.fill = my_fill  
+
+    def table_widget_zapoln(self, ws):
+
+        self.my_window.ui.tableWidget.setColumnCount(ws.max_column)
+        self.my_window.ui.tableWidget.setHorizontalHeaderLabels(
+            [str(ws['A1'].value), str(ws['B1'].value), str(ws['C1'].value),
+             str(ws['D1'].value), str(ws['E1'].value), str(ws['F1'].value),
+             str(ws['G1'].value), str(ws['H1'].value), str(ws['I1'].value), str(ws['J1'].value), str(ws['K1'].value)])
+
+        self.my_window.ui.tableWidget.setRowCount(ws.max_row)
+
+        schet = 0
+        for cell in ws['A']:
+            self.my_window.ui.tableWidget.setItem(
+                schet, 0, QTableWidgetItem(str(cell.value)))
+            schet = schet + 1
+            if cell.value != None and cell.value != 'Отдел':
+                self.mnozh.add(cell.value)
 
         schet = 0
         for cell in ws['B']:
@@ -372,6 +323,56 @@ class MyThread(QThread):
             schet = schet + 1
 
         self.my_window.ui.tableWidget.resizeColumnsToContents()
+
+    def run(self):
+        self.my_window.ui.statusbar.showMessage(
+            'Анализ и сопоставление данных исходной таблицы')
+        self.my_window.ui.pushButton_2.setEnabled(False)
+        self.my_window.ui.pushButton_3.setEnabled(False)
+        wb = openpyxl.load_workbook(self.my_window.filename[0])
+        sheets = wb.sheetnames
+
+        try:
+            if len(sheets) == 1:
+                sheet = sheets[0]
+            else:
+                self.pause = True
+                self.showMessageBox.emit(sheets)
+                while self.pause:
+                    self.sleep(1)
+                sheet = self.my_window.ChoosedSheet
+        except Exception as ex:
+
+            messagebox = QMessageBox(
+                parent=self, text='Ошибка', detailedText=str(ex))
+            messagebox.setWindowTitle('Внимание!')
+            messagebox.setStyleSheet(
+                '.QPushButton{background-color: #444444;color: white;}')
+            messagebox.show()
+
+        name_sheet = wb[sheet]
+
+        if self.my_window.first:
+
+            self.my_window.wb = Workbook()
+            ws = self.my_window.wb.active
+            ws.title = "Сводный перечень имущества"
+        
+        else:
+            self.my_window.wb = openpyxl.load_workbook('C:\Windows\Temp\Сводный перечень имущества.xlsx')
+            ws = self.my_window.wb.active
+
+        self.zapoln_A(ws, name_sheet)
+        self.my_window.ui.statusbar.showMessage('Конвертация данных')
+        self.zapoln_B(ws, name_sheet)
+        self.zapoln_D(ws, name_sheet)
+        self.zapoln_E(ws, name_sheet)
+        self.zapoln_C(ws, name_sheet)
+        self.zapoln_F(ws, name_sheet)
+        self.my_window.ui.statusbar.showMessage('Последние штрихи')
+        self.zapoln_H_I_J_K_G(ws, name_sheet)
+        self.style_cell(ws)
+        self.table_widget_zapoln(ws)
 
         self.my_window.wb.save(
             'C:\Windows\Temp\Сводный перечень имущества.xlsx')
