@@ -22,6 +22,163 @@ class MyThread(QThread):
         self.my_window = my_window
         self.pause = False
         self.mnozh = set()
+        self.number_row = 1
+        
+
+
+    def zapoln_A(self, ws, name_sheet):
+        n = 1
+        if self.my_window.first:
+            k = ws.max_row
+            self.number_row = k
+        else:
+            k = ws.max_row + 1
+            self.number_row = k
+            self.store = k
+
+        znach = ''
+        for cell in name_sheet['A']:
+            if re.match(r'\d', str(cell.value)):
+                if name_sheet['C' + str(n)].value is not None:
+                    ws['A' + str(k)] = znach
+                    ws['A' + str(k)].font = Font(size="8", name='Arial')
+                    ws['A' + str(k)].alignment = Alignment(horizontal='center',
+                                                           vertical='center')
+                    k = k + 1
+            else:
+                if name_sheet['C' + str(n)].value is None:
+                    znach = cell.value
+                    if cell.value is not None:
+                        for key, value in spravochnik.items():
+                            if znach in key:
+                                znach = value
+                else:
+                    znach = cell.value
+                    if cell.value is not None:
+                        for key, value in spravochnik.items():
+                            if znach in key:
+                                znach = value
+                    ws['A' + str(k)] = znach
+                    ws['A' + str(k)].font = Font(size="8", name='Arial')
+                    ws['A' + str(k)].alignment = Alignment(horizontal='center',
+                                                           vertical='center')
+                    k = k + 1
+            n = n + 1
+
+    def zapoln_B(self, ws, name_sheet):
+        n = 1
+        k = self.number_row
+  
+        for cell in name_sheet['C']:
+            if name_sheet['C' + str(n)].value is not None:
+                ws['B' + str(k)] = cell.value
+                ws['B' + str(k)].font = Font(size="8", name='Arial')
+                ws['B' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
+                k = k + 1
+            n = n + 1
+
+    def zapoln_D(self, ws, name_sheet):
+        n = 1
+        k = self.number_row    
+        
+        for cell in name_sheet['J']:
+            if name_sheet['C' + str(n)].value is not None:
+                ws['D' + str(k)] = cell.value
+                ws['D' + str(k)].font = Font(size="8", name='Arial')
+                ws['D' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
+                ws['D' + str(k)].number_format = '0'
+                k = k + 1
+            n = n + 1
+
+    def zapoln_E(self, ws, name_sheet):
+        n = 1
+        k = self.number_row 
+
+        for cell in name_sheet['P']:
+            if name_sheet['C' + str(n)].value is not None:
+                ws['E' + str(k)] = cell.value
+                ws['E' + str(k)].font = Font(size="8", name='Arial')
+                ws['E' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
+                k = k + 1
+            n = n + 1
+
+    def zapoln_C(self, ws, name_sheet):
+        n = 1
+        k = self.number_row 
+
+        for cell in name_sheet['V']:
+            if name_sheet['C' + str(n)].value is not None:
+                ws['C' + str(k)] = cell.value
+                ws['C' + str(k)].font = Font(size="8", name='Arial')
+                ws['C' + str(k)].alignment = Alignment(horizontal='center',
+                                                       vertical='center')
+                k = k + 1
+            n = n + 1
+
+        if self.my_window.first is not True:
+            ws.delete_rows(self.store, 1)
+
+    def zapoln_F(self, ws, name_sheet):
+        n = 1
+        k = self.number_row 
+        
+        for cell in name_sheet['V']: 
+            if name_sheet['C' + str(n)].value is not None:
+                ws['F' + str(k)] = "=YEARFRAC(E" + str(k) + ",TODAY(),1)"
+                ws['F' + str(k)].font = Font(size="8", name='Arial')
+                ws['F' + str(k)].alignment = Alignment(horizontal='center',
+                                                    vertical='center')
+                k = k + 1
+            n = n + 1
+
+    def zapoln_H_I_J_K_G(self, ws, name_sheet):
+        n = 1
+        k = self.number_row
+
+        for cell in name_sheet['V']:
+            if name_sheet['C' + str(n)].value is not None:
+                ws['H' + str(k)] = "=IF((G" + str(k) + "-F" + str(k) + ")<0,F" + str(k) + "-G" + str(k) + ",\"в пределах " \
+                                                                                                        "срока\") "
+                ws['H' + str(k)].font = Font(size="8", name='Arial')
+                ws['H' + str(k)].alignment = Alignment(horizontal='center',
+                                                    vertical='center')
+                ws['H' + str(k)].number_format = '0.0'
+
+                ws['I' + str(k)] = "=E" + str(k) + "+" + "G" + str(k) + "*365"
+                ws['I' + str(k)].font = Font(size="8", name='Arial')
+                ws['I' + str(k)].alignment = Alignment(horizontal='center',
+                                                        vertical='center')
+                ws['I' + str(k)].number_format = 'DD.mm.YYYY'
+
+                ws['J' + str(k)] = "=TEXT(I" + str(k) + ",\"гггг\")"
+                ws['J' + str(k)].font = Font(size="8", name='Arial')
+                ws['J' + str(k)].alignment = Alignment(horizontal='center',
+                                                        vertical='center')
+
+                ws['K' + str(k)] = "=IF(J" + str(k) + "<=\"2022\""  + ",\"да\"" + ",\"нет\")"
+                ws['K' + str(k)].font = Font(size="8", name='Arial')
+                ws['K' + str(k)].alignment = Alignment(horizontal='center',
+                                                        vertical='center')
+                
+
+                for key in lifetime:
+                    if key.lower() in str(cell.value).lower():
+                        ws['G' + str(k)] = lifetime[key]
+
+                ws['G' + str(k)].font = Font(size="8", name='Arial')
+                ws['G' + str(k)].alignment = Alignment(horizontal='center',
+                                                    vertical='center')
+                ws['G' + str(k)].number_format = '0'
+
+                k = k + 1
+            n = n + 1
+
+        if self.my_window.first is not True:
+            ws.delete_rows(ws.max_row, 1)
+
 
     def run(self):
         self.my_window.ui.statusbar.showMessage(
@@ -51,131 +208,27 @@ class MyThread(QThread):
             messagebox.show()
 
         name_sheet = wb[sheet]
-        n = 1
-        k = 1
-        self.my_window.wb = Workbook()
-        ws = self.my_window.wb.active
-        ws.title = "Сводный перечень имущества"
+
+        if self.my_window.first:
+
+            self.my_window.wb = Workbook()
+            ws = self.my_window.wb.active
+            ws.title = "Сводный перечень имущества"
+        
+        else:
+            self.my_window.wb = openpyxl.load_workbook('C:\Windows\Temp\Сводный перечень имущества.xlsx')
+            ws = self.my_window.wb.active
 
         ws.row_dimensions[1].ht = 39.6
-        znach = ''
-        for cell in name_sheet['A']:
-            if re.match(r'\d', str(cell.value)):
-                if name_sheet['C' + str(n)].value is not None:
-                    ws['A' + str(k)] = znach
-                    ws['A' + str(k)].font = Font(size="8", name='Arial')
-                    ws['A' + str(k)].alignment = Alignment(horizontal='center',
-                                                           vertical='center')
-                    k = k + 1
-            else:
-                if name_sheet['C' + str(n)].value is None:
-                    znach = cell.value
-                    if cell.value is not None:
-                        for key, value in spravochnik.items():
-                            if znach in key:
-                                znach = value
-                else:
-                    znach = cell.value
-                    if cell.value is not None:
-                        for key, value in spravochnik.items():
-                            if znach in key:
-                                znach = value
-                    ws['A' + str(k)] = znach
-                    ws['A' + str(k)].font = Font(size="8", name='Arial')
-                    ws['A' + str(k)].alignment = Alignment(horizontal='center',
-                                                           vertical='center')
-                    k = k + 1
-            n = n + 1
+        self.zapoln_A(ws, name_sheet)
         self.my_window.ui.statusbar.showMessage('Конвертация данных')
-        n = 1
-        k = 1
-        for cell in name_sheet['C']:
-            if name_sheet['C' + str(n)].value is not None:
-                ws['B' + str(k)] = cell.value
-                ws['B' + str(k)].font = Font(size="8", name='Arial')
-                ws['B' + str(k)].alignment = Alignment(horizontal='center',
-                                                       vertical='center')
-                k = k + 1
-            n = n + 1
-        n = 1
-        k = 1
-        for cell in name_sheet['J']:
-            if name_sheet['C' + str(n)].value is not None:
-                ws['D' + str(k)] = cell.value
-                ws['D' + str(k)].font = Font(size="8", name='Arial')
-                ws['D' + str(k)].alignment = Alignment(horizontal='center',
-                                                       vertical='center')
-                ws['D' + str(k)].number_format = '0'
-                k = k + 1
-            n = n + 1
-        n = 1
-        k = 1
-        for cell in name_sheet['P']:
-            if name_sheet['C' + str(n)].value is not None:
-                ws['E' + str(k)] = cell.value
-                ws['E' + str(k)].font = Font(size="8", name='Arial')
-                ws['E' + str(k)].alignment = Alignment(horizontal='center',
-                                                       vertical='center')
-                k = k + 1
-            n = n + 1
-        n = 1
-        k = 1
-        for cell in name_sheet['V']:
-            if name_sheet['C' + str(n)].value is not None:
-                ws['C' + str(k)] = cell.value
-                ws['C' + str(k)].font = Font(size="8", name='Arial')
-                ws['C' + str(k)].alignment = Alignment(horizontal='center',
-                                                       vertical='center')
-                k = k + 1
-            n = n + 1
-        n = 1
-        k = 1
-        for cell in ws['B']:
-            ws['F' + str(k)] = "=YEARFRAC(E" + str(k) + ",TODAY(),1)"
-            ws['F' + str(k)].font = Font(size="8", name='Arial')
-            ws['F' + str(k)].alignment = Alignment(horizontal='center',
-                                                   vertical='center')
-            k = k + 1
-            n = n + 1
+        self.zapoln_B(ws, name_sheet)
+        self.zapoln_D(ws, name_sheet)
+        self.zapoln_E(ws, name_sheet)
+        self.zapoln_C(ws, name_sheet)
+        self.zapoln_F(ws, name_sheet)
         self.my_window.ui.statusbar.showMessage('Последние штрихи')
-        n = 1
-        k = 1
-        for cell in ws['B']:
-            ws['H' + str(k)] = "=IF((G" + str(k) + "-F" + str(k) + ")<0,F" + str(k) + "-G" + str(k) + ",\"в пределах " \
-                                                                                                      "срока\") "
-            ws['H' + str(k)].font = Font(size="8", name='Arial')
-            ws['H' + str(k)].alignment = Alignment(horizontal='center',
-                                                   vertical='center')
-            ws['H' + str(k)].number_format = '0.0'
-
-            ws['I' + str(k)] = "=E" + str(k) + "+" + "G" + str(k) + "*365"
-            ws['I' + str(k)].font = Font(size="8", name='Arial')
-            ws['I' + str(k)].alignment = Alignment(horizontal='center',
-                                                       vertical='center')
-            ws['I' + str(k)].number_format = 'DD.mm.YYYY'
-
-            ws['J' + str(k)] = "=TEXT(I" + str(k) + ",\"гггг\")"
-            ws['J' + str(k)].font = Font(size="8", name='Arial')
-            ws['J' + str(k)].alignment = Alignment(horizontal='center',
-                                                       vertical='center')
-
-            ws['K' + str(k)] = "=IF(J" + str(k) + "<=\"2022\""  + ",\"да\"" + ",\"нет\")"
-            ws['K' + str(k)].font = Font(size="8", name='Arial')
-            ws['K' + str(k)].alignment = Alignment(horizontal='center',
-                                                       vertical='center')
-            
-
-            for key in lifetime:
-                if key.lower() in str(cell.value).lower():
-                    ws['G' + str(k)] = lifetime[key]
-
-            ws['G' + str(k)].font = Font(size="8", name='Arial')
-            ws['G' + str(k)].alignment = Alignment(horizontal='center',
-                                                   vertical='center')
-            ws['G' + str(k)].number_format = '0'
-
-            k = k + 1
-            n = n + 1
+        self.zapoln_H_I_J_K_G(ws, name_sheet)
 
         ws.column_dimensions['A'].width = 20
         ws.column_dimensions['B'].width = 48
@@ -248,16 +301,6 @@ class MyThread(QThread):
             schet = schet + 1
             if cell.value != None and cell.value != 'Отдел':
                 self.mnozh.add(cell.value)
-
-            # if cell.value == 'Аппарат Управления':
-            #     my_red = openpyxl.styles.colors.Color(rgb='00B7DEE8')
-            #     my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
-            #     cell.fill = my_fill
-
-            # if cell.value == 'Склад':
-            #     my_red = openpyxl.styles.colors.Color(rgb='00EBF1DE')
-            #     my_fill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=my_red)
-            #     cell.fill = my_fill    
 
         tumbler = 0
         for row_cells in ws.iter_rows():
@@ -346,3 +389,5 @@ class MyThread(QThread):
         self.my_window.movie.stop()
         self.send_mnozh.emit(self.mnozh)
         self.fihishThread.emit("ended")
+        self.my_window.first = False
+

@@ -28,6 +28,7 @@ import os
 class MyWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
+        self.first = True
         self.otdels = []
         self.analizes = analize.Analyze(my_window=self)
         super(MyWindow, self).__init__()

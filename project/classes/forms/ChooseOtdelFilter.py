@@ -24,6 +24,7 @@ class ChooseOtdelFilter(QtWidgets.QDialog):
         self.mnozh = set
         self.sorted_list = list(self.mnozh)
         self.sorted_list.sort()
+        self.ui.listWidget.clear()
         self.ui.listWidget.addItems(self.sorted_list)
 
     def set_header_table2(self):
