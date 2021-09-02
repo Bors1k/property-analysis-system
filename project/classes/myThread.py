@@ -66,10 +66,18 @@ class MyThread(QThread):
     def zapoln_B(self, ws, name_sheet):
         n = 1
         k = self.number_row
-  
+
         for cell in name_sheet['C']:
             if name_sheet['C' + str(n)].value is not None:
-                ws['B' + str(k)] = cell.value
+                value = cell.value
+                index = cell.value.find("Стеллаж")
+                if(index != -1):
+                     value = cell.value.replace("Стеллаж", "Стелаж")
+                index =  cell.value.find("стеллаж")
+                if(index != -1):
+                     value = cell.value.replace("стеллаж", "стелаж")
+
+                ws['B' + str(k)] = value
                 ws['B' + str(k)].font = Font(size="8", name='Arial')
                 ws['B' + str(k)].alignment = Alignment(horizontal='center',
                                                        vertical='center')
