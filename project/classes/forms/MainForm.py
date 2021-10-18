@@ -23,6 +23,7 @@ from openpyxl.styles import Font, Alignment
 import openpyxl
 import datetime
 import os
+import json
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -104,20 +105,50 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.label_animation.setEnabled(False)
 
     def btn_clicked(self):
+        with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
+            templates = json.load(f)
+            open_folder = list(templates["open_folder"])
+            for i in range(len(open_folder)):
+                if open_folder[-1] != '\\' and open_folder[-1] != 'C:\\':
+                    del open_folder[-1]
+            open_folder = ''.join(open_folder)
         self.filename = QFileDialog.getOpenFileName(
-            None, 'Открыть', os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop'), 'All Files(*.xlsx)')
+            None, 'Открыть', open_folder, 'All Files(*.xlsx)')
         if str(self.filename) in "('', '')":
             self.ui.statusbar.showMessage('Файл не выбран')
         else:
+            filename = self.filename[0]
+            filename = filename.replace('/', '\\')
+            filename = filename.replace('.xlsx', '')
+            with open('C:\\Users\\Public\\property-analysis-system\\dicts.json', 'r+') as f:
+                json_data = json.load(f)
+                json_data['open_folder'] = filename
+                f.seek(0)
+                f.write(json.dumps(json_data))
+                f.truncate()
+
             self.new_thread()
 
     def save_btn_clicked(self):
-        file_save, _ = QFileDialog.getSaveFileName(
-            self, 'Сохранить', 'Сводный перечень имущества', 'All Files(*.xlsx)')
+        with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
+            templates = json.load(f)
+            save_folder = list(templates["save_folder"])
+            save_folder = ''.join(save_folder)
+            file_save, _ = QFileDialog.getSaveFileName(
+                self, 'Сохранить', save_folder, 'Excel(*.xlsx)')
         try:
             if str(file_save) != "":
                 self.wb.save(file_save)
                 self.ui.statusbar.showMessage('Таблица сохранена')
+                file_save = file_save.replace('/', '\\')
+                file_save = file_save.replace('.xlsx', '')
+                with open('C:\\Users\\Public\\property-analysis-system\\dicts.json', 'r+') as f:
+                    json_data = json.load(f)
+                    json_data['save_folder'] = file_save
+                    f.seek(0)
+                    f.write(json.dumps(json_data))
+                    f.truncate()
+
         except PermissionError as err:
             messagebox = QMessageBox(
                 parent=self, text='Ошибка доступа. Необходимо закрыть файл', detailedText=str(err))

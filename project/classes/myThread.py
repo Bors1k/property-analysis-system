@@ -333,6 +333,7 @@ class MyThread(QThread):
         self.my_window.ui.tableWidget.resizeColumnsToContents()
 
     def run(self):
+        
         self.my_window.ui.statusbar.showMessage(
             'Анализ и сопоставление данных исходной таблицы')
         self.my_window.ui.pushButton_2.setEnabled(False)
