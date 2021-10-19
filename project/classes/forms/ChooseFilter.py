@@ -2,11 +2,10 @@ from PyQt5 import QtWidgets
 import datetime
 
 from UIforms.ChooseFilter.ChooseFilter import Ui_Dialog_ChooseFilter
+from classes.dicts import Dictionary
 
-from classes.dicts import choose_position,choose_position_header,choose_position_header_evry_two
 
 class ChooseFilter(QtWidgets.QDialog):
-
     def __init__(self, my_window):
         super(ChooseFilter, self).__init__()
         self.vivod_header = []
@@ -15,7 +14,9 @@ class ChooseFilter(QtWidgets.QDialog):
         self.ui.setupUi(self)
         spisok = []
         self.vivod_dict = {}
-        for key, value in choose_position.items():
+        self.dictionary = Dictionary()
+        self.dictionary.zapoln_dict()
+        for key, value in self.dictionary.choose_position.items():
             spisok.append(value)
         self.ui.listWidget.addItems(spisok)
         self.ui.listWidget.setSelectionMode(
@@ -35,12 +36,12 @@ class ChooseFilter(QtWidgets.QDialog):
                 str(self.ui.listWidget.selectedItems()[i].text()))
 
         znach = self.znach
-        for key, val in choose_position_header.items():
+        for key, val in self.dictionary.choose_position_header.items():
             for value in znach:
                 if(value == val):
                     self.vivod_header.append(key)
-                    self.vivod_header.append(choose_position_header_evry_two[key])
-                    self.vivod_header.append(choose_position_header_evry_two[key] + " в " + str(datetime.date.today().year + 1)  + " году")
+                    self.vivod_header.append(self.dictionary.choose_position_header_evry_two[key])
+                    self.vivod_header.append(self.dictionary.choose_position_header_evry_two[key] + " в " + str(datetime.date.today().year + 1)  + " году")
                 
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
         self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(

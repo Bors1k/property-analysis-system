@@ -1,8 +1,7 @@
 from classes.shipment import Shipment
 import xlwings as xw
-from classes.dicts import choose_position, choose_position_header
-
-
+# from classes.dicts import choose_position, choose_position_header
+from classes.dicts import Dictionary
 class Analyze:
     def __init__(self, my_window):
         self.my_window = my_window
@@ -22,18 +21,22 @@ class Analyze:
         self.new_select_otdel = {}
         self.new_select_imushestvo = {}
         self.imush = ''
+        self.dictionary = Dictionary()
+        self.dictionary.zapoln_dict()
 
     def set_otdel(self, otdel):
         self.otdels = otdel
 
     def set_znach(self, znach):
+        self.dictionary.zapoln_dict()
         self.znach = []
         for zn in znach:
-            for key in choose_position:
-                if(zn==choose_position[key]):
+            for key in self.dictionary.choose_position:
+                if(zn==self.dictionary.choose_position[key]):
                     self.znach.append(str(key).lower())
 
     def analyze_xls(self, filename):
+        self.dictionary.zapoln_dict()
         app = xw.App(visible=False)
         wbxl = xw.Book(filename)
         sh = wbxl.sheets[0]
@@ -95,9 +98,9 @@ class Analyze:
                 if(item.getName().lower() == self.dict_name_otdel[x]):
                     for value in self.znach:
                         if(value.lower() in self.dict_imushestvo[x]):
-                            for key in choose_position_header:
-                                if(choose_position_header[key]==choose_position[value]):
-                                    if 'стол' in choose_position_header[key] and 'настол' in self.dict_imushestvo[x]:
+                            for key in self.dictionary.choose_position_header:
+                                if(self.dictionary.choose_position_header[key]==self.dictionary.choose_position[value]):
+                                    if 'стол' in self.dictionary.choose_position_header[key] and 'настол' in self.dict_imushestvo[x]:
                                         pass
                                     else:
                                         shipment = Shipment(key)

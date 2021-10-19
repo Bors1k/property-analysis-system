@@ -6,8 +6,7 @@ import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 
-from classes.dicts import lifetime
-from classes.dicts import spravochnik
+from classes.dicts import Dictionary
 
 import re
 
@@ -23,6 +22,8 @@ class MyThread(QThread):
         self.pause = False
         self.mnozh = set()
         self.number_row = 1
+        self.dictionary = Dictionary()
+        self.dictionary.zapoln_dict()
         
     def zapoln_A(self, ws, name_sheet):
         n = 1
@@ -47,13 +48,13 @@ class MyThread(QThread):
                 if name_sheet['C' + str(n)].value is None:
                     znach = cell.value
                     if cell.value is not None:
-                        for key, value in spravochnik.items():
+                        for key, value in self.dictionary.spravochnik.items():
                             if znach in key:
                                 znach = value
                 else:
                     znach = cell.value
                     if cell.value is not None:
-                        for key, value in spravochnik.items():
+                        for key, value in self.dictionary.spravochnik.items():
                             if znach in key:
                                 znach = value
                     ws['A' + str(k)] = znach
@@ -169,9 +170,9 @@ class MyThread(QThread):
                 ws['K' + str(k)].alignment = Alignment(horizontal='center',
                                                         vertical='center')
 
-                for key in lifetime:
+                for key in self.dictionary.lifetime:
                     if key.lower() in str(ws['B' + str(k)].value).lower():
-                        ws['G' + str(k)] = lifetime[key]
+                        ws['G' + str(k)] = self.dictionary.lifetime[key]
 
                 ws['G' + str(k)].font = Font(size="8", name='Arial')
                 ws['G' + str(k)].alignment = Alignment(horizontal='center',

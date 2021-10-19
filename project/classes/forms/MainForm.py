@@ -15,8 +15,7 @@ from classes.forms.SpravWindow import SpravWindow
 
 from classes import analize
 from classes.myThread import MyThread
-from classes.dicts import choose_position_header_evry_two
-from classes import dicts
+from classes.dicts import Dictionary
 
 
 from openpyxl.styles.borders import BORDER_MEDIUM, Border, Side, BORDER_THIN
@@ -36,8 +35,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.otdels = []
         self.analizes = analize.Analyze(my_window=self)
         super(MyWindow, self).__init__()
-        self.chooseFilter = ChooseFilter(my_window=self)
-        self.chooseOtdelFilter = ChooseOtdelFilter(my_window=self)
+        self.dictionary = Dictionary()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.aboutForm = None
@@ -73,6 +71,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_5.setEnabled(False)
         self.ui.pushButton_6.setEnabled(False)
         self.ui.pushButton_7.setEnabled(False)
+        self.dictionary.zapoln_dict()
 
     def resizeEvent(self, event):
         self.ui.label_animation.move(int(self.width() * 0.5) - int(self.ui.label_animation.width() * 0.5),
@@ -95,6 +94,7 @@ class MyWindow(QtWidgets.QMainWindow):
             self.movie.stop()
 
     def new_thread(self):
+        self.chooseOtdelFilter = ChooseOtdelFilter(my_window=self)
         self.my_thread = MyThread(my_window=self)
         self.my_thread.showMessageBox.connect(self.msgBox)
         self.my_thread.fihishThread.connect((self.lblDis))
@@ -213,13 +213,28 @@ class MyWindow(QtWidgets.QMainWindow):
     def del_dict_json(self):
         row = self.spravForm.ui.tableNorm.currentItem().row()
         cell =self.spravForm.ui.tableNorm.item(row, 0).text() 
+        morph = pymorphy2.MorphAnalyzer()
+        res = morph.parse(cell)[0]
         with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
             templates = json.load(f)
-            lifetime = dict(templates['lifetime'])
+            lifetime = dict(templates['lifetime'])            
             del lifetime[cell]
+
+            choose_position = dict(templates['choose_position'])
+            del choose_position[cell]
+
+            choose_position_header = dict(templates['choose_position_header'])
+            del choose_position_header['Количество ' + res.inflect({'plur', 'gent'}).word]
+
+            choose_position_header_evry_two = dict(templates['choose_position_header_evry_two'])
+            del choose_position_header_evry_two['Количество ' + res.inflect({'plur', 'gent'}).word]
+
         with open('C:\\Users\\Public\\property-analysis-system\\dicts.json', 'r+') as f:
             json_data = json.load(f)
             json_data['lifetime'] = lifetime
+            json_data['choose_position'] = choose_position
+            json_data['choose_position_header'] = choose_position_header
+            json_data['choose_position_header_evry_two'] = choose_position_header_evry_two
             f.seek(0)
             f.write(json.dumps(json_data))
             f.truncate()
@@ -261,10 +276,12 @@ class MyWindow(QtWidgets.QMainWindow):
         self.spravForm.show()
 
     def openChooseFilter(self):
-        self.chooseFilter.show()
+        chooseFilter = ChooseFilter(my_window=self)
+        chooseFilter.exec_()
 
     def openChooseOtdelFilters(self):
-        self.chooseOtdelFilter.show()
+        # chooseOtdelFilter = ChooseOtdelFilter(my_window=self)
+        self.chooseOtdelFilter.exec_()
 
     def resetAnalyz(self):
         self.ui.tableWidget_2.clear()
@@ -272,6 +289,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_2.setColumnCount(0)
 
     def startAnalyz(self):
+        self.dictionary.zapoln_dict()
         self.filename = 'C:\Windows\Temp\Сводный перечень имущества.xlsx'
         self.otdels = self.analizes.analyze_xls(filename=self.filename)
 
@@ -285,11 +303,11 @@ class MyWindow(QtWidgets.QMainWindow):
                                 self.ui.tableWidget_2.setItem(
                                     i, j, QTableWidgetItem(str(ship.shipCount)))
                                 tempFlag = True
-                            if(choose_position_header_evry_two[ship.name] == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
+                            if(self.dictionary.choose_position_header_evry_two[ship.name] == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
                                 self.ui.tableWidget_2.setItem(
                                     i, j, QTableWidgetItem(str(ship.expiredShipCount)))
                                 tempFlag = True
-                            if((choose_position_header_evry_two[ship.name] + " в " + str(datetime.date.today().year + 1)  + " году") == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
+                            if((self.dictionary.choose_position_header_evry_two[ship.name] + " в " + str(datetime.date.today().year + 1)  + " году") == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
                                 self.ui.tableWidget_2.setItem(
                                     i, j, QTableWidgetItem(str(ship.expiredInNextYearCount)))
                                 tempFlag = True
