@@ -11,15 +11,18 @@ from classes.forms.ChooseOtdelFilter import ChooseOtdelFilter
 from classes.forms.AboutWindow import AboutWindows
 from classes.forms.ChooseWindow import ChooseWindow
 from classes.forms.ChooseFilter import ChooseFilter
+from classes.forms.SpravWindow import SpravWindow
 
 from classes import analize
 from classes.myThread import MyThread
 from classes.dicts import choose_position_header_evry_two
+from classes import dicts
 
 
 from openpyxl.styles.borders import BORDER_MEDIUM, Border, Side, BORDER_THIN
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment
+import pymorphy2
 import openpyxl
 import datetime
 import os
@@ -38,6 +41,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.aboutForm = None
+        self.spravForm = None
         self.setWindowIcon(QtGui.QIcon(':roskazna.png'))
         self.ui.label_animation = QLabel(self)
         self.ui.label_animation.setFixedHeight(130)
@@ -47,6 +51,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_2.clicked.connect(self.btn_clicked)
         self.ui.pushButton_3.clicked.connect(self.save_btn_clicked)
         self.ui.menu.actions()[0].triggered.connect(self.OpenAbout)
+        self.ui.menu.actions()[1].triggered.connect(self.OpenSprav)
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
         stylesheet = "::section{background-color:rgb(252, 246, 5);}"
@@ -169,6 +174,91 @@ class MyWindow(QtWidgets.QMainWindow):
             self.aboutForm.close()
         self.aboutForm = AboutWindows()
         self.aboutForm.show()
+
+    def add_dict_json(self):
+        imushestvo = self.spravForm.ui.textEdit.toPlainText()
+        srok_po_normam = int(self.spravForm.ui.textEdit_2.toPlainText())
+        print(imushestvo)
+        print(srok_po_normam)
+        morph = pymorphy2.MorphAnalyzer()
+        res = morph.parse(imushestvo)[0]
+        res.inflect({'plur', 'gent'}) 
+        print(res.inflect({'plur', 'gent'}).word)
+        new_per = res.inflect({'gent'}).word
+        print(new_per)
+
+        with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
+            templates = json.load(f)
+            lifetime = dict(templates['lifetime'])
+            choose_position = dict(templates['choose_position'])
+            choose_position_header = dict(templates['choose_position_header'])
+            choose_position_header_evry_two = dict(templates['choose_position_header_evry_two'])
+            
+        choose_position_header_evry_two['Количество ' + res.inflect({'plur', 'gent'}).word] = 'Из них ' + res.inflect({'plur'}).word + ' с превышенным сроком'
+        choose_position_header['Количество ' + res.inflect({'plur', 'gent'}).word] = imushestvo
+        choose_position[imushestvo] = imushestvo
+        lifetime[imushestvo] = srok_po_normam
+        with open('C:\\Users\\Public\\property-analysis-system\\dicts.json', 'r+') as f:
+            json_data = json.load(f)
+            json_data['lifetime'] = lifetime
+            json_data['choose_position'] = choose_position
+            json_data['choose_position_header'] = choose_position_header
+            json_data['choose_position_header_evry_two'] = choose_position_header_evry_two
+            f.seek(0)
+            f.write(json.dumps(json_data))
+            f.truncate()
+        self.OpenSprav()
+        # dicts.zapoln_dict()
+
+    def del_dict_json(self):
+        row = self.spravForm.ui.tableNorm.currentItem().row()
+        cell =self.spravForm.ui.tableNorm.item(row, 0).text() 
+        with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
+            templates = json.load(f)
+            lifetime = dict(templates['lifetime'])
+            del lifetime[cell]
+        with open('C:\\Users\\Public\\property-analysis-system\\dicts.json', 'r+') as f:
+            json_data = json.load(f)
+            json_data['lifetime'] = lifetime
+            f.seek(0)
+            f.write(json.dumps(json_data))
+            f.truncate()
+        self.OpenSprav()
+        
+    def OpenSprav(self):
+        if (self.spravForm != None):
+            self.spravForm.close()
+        self.spravForm = SpravWindow()
+        self.spravForm.ui.pushButton.clicked.connect(self.add_dict_json)
+        self.spravForm.ui.pushButton_2.clicked.connect(self.del_dict_json)
+        stylesheet = "::section{background-color: #444444;}"
+        self.spravForm.ui.tableNorm.horizontalHeader().setStyleSheet(stylesheet)
+        self.spravForm.ui.tableNorm.verticalHeader().setStyleSheet(stylesheet)
+        self.spravForm.ui.tableNorm.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.spravForm.ui.tableNorm.verticalScrollBar().setStyleSheet('background: #444444')
+        self.spravForm.ui.tableNorm.horizontalScrollBar().setStyleSheet('background: #444444')
+        self.spravForm.ui.centralwidget.setStyleSheet('.QTableWidget .QTableCornerButton::section {background-color: rgba(0,0,0,0);')
+        with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
+            templates = json.load(f)
+            lifetime = dict(templates['lifetime'])
+            # print(lifetime)
+            
+            self.spravForm.ui.tableNorm.setColumnCount(2)
+            self.spravForm.ui.tableNorm.setHorizontalHeaderLabels(
+            ['Имущество', 'Срок по нормам'])
+
+            self.spravForm.ui.tableNorm.setRowCount(len(lifetime))
+
+            schet = 0
+            for key, value in lifetime.items():
+                # print(value)
+                self.spravForm.ui.tableNorm.setItem(
+                    schet, 0, QTableWidgetItem(key))
+                self.spravForm.ui.tableNorm.setItem(
+                    schet, 1, QTableWidgetItem(str(value)))
+                schet = schet + 1
+
+        self.spravForm.show()
 
     def openChooseFilter(self):
         self.chooseFilter.show()

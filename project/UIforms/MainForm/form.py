@@ -166,7 +166,10 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.action = QtWidgets.QAction(MainWindow)
         self.action.setObjectName("action")
+        self.action_2 = QtWidgets.QAction(MainWindow)
+        self.action_2.setObjectName("action_2")
         self.menu.addAction(self.action)
+        self.menu.addAction(self.action_2)
         self.menubar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -186,3 +189,5 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Аналитика по отделам"))
         self.menu.setTitle(_translate("MainWindow", "Меню"))
         self.action.setText(_translate("MainWindow", "О программе"))
+        self.action_2.setText(_translate("MainWindow", "Справочник"))
+

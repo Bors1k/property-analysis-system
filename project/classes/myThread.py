@@ -168,7 +168,6 @@ class MyThread(QThread):
                 ws['K' + str(k)].font = Font(size="8", name='Arial')
                 ws['K' + str(k)].alignment = Alignment(horizontal='center',
                                                         vertical='center')
-                
 
                 for key in lifetime:
                     if key.lower() in str(ws['B' + str(k)].value).lower():

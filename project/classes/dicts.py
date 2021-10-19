@@ -1,6 +1,17 @@
 import json
 import os.path
 
+def zapoln_dict():
+    with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
+        templates = json.load(f)
+        lifetime = dict(templates['lifetime'])
+        choose_position = dict(templates['choose_position'])
+        choose_position_header = dict(templates['choose_position_header'])
+        choose_position_header_evry_two = dict(templates['choose_position_header_evry_two'])
+        spravochnik = dict(templates['spravochnik'])
+        choose_otdel = list(templates['spravochnik'])
+        print('execute')
+
 check_file = os.path.exists("C:\\Users\\Public\\property-analysis-system\\dicts.json")
 if check_file:
     # with open ("C:\\Users\\UFK\\Documents\\GitHub\property-analysis-system\\project\\assets\\dicts.json", encoding='utf-8') as f:
