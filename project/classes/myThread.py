@@ -165,7 +165,7 @@ class MyThread(QThread):
                 ws['J' + str(k)].alignment = Alignment(horizontal='center',
                                                         vertical='center')
 
-                ws['K' + str(k)] = "=IF(J" + str(k) + "<=\"2022\""  + ",\"да\"" + ",\"нет\")"
+                ws['K' + str(k)] = "=IF(J" + str(k) + "<=\"" + str(self.my_window.ui.comboBox.currentText()) + "\""  + ",\"да\"" + ",\"нет\")"
                 ws['K' + str(k)].font = Font(size="8", name='Arial')
                 ws['K' + str(k)].alignment = Alignment(horizontal='center',
                                                         vertical='center')
@@ -238,7 +238,7 @@ class MyThread(QThread):
         ws['J1'].font = Font(bold=True, size="10", name='Arial')
         ws['J1'].alignment = Alignment(
             wrap_text=True, horizontal='center', vertical='center')
-        ws['K1'] = 'Истекает к концу 2022 года'
+        ws['K1'] = 'Истекает к концу ' + str(self.my_window.ui.comboBox.currentText()) + ' года'
         ws['K1'].font = Font(bold=True, size="10", name='Arial')
         ws['K1'].alignment = Alignment(
             wrap_text=True, horizontal='center', vertical='center')
@@ -338,6 +338,7 @@ class MyThread(QThread):
             'Анализ и сопоставление данных исходной таблицы')
         self.my_window.ui.pushButton_2.setEnabled(False)
         self.my_window.ui.pushButton_3.setEnabled(False)
+        self.my_window.ui.comboBox.setEnabled(False)
         wb = openpyxl.load_workbook(self.my_window.filename[0])
         sheets = wb.sheetnames
 

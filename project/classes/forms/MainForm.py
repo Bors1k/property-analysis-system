@@ -136,7 +136,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 f.truncate()
 
             self.new_thread()
-
+          
     def save_btn_clicked(self):
         with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
             templates = json.load(f)
@@ -310,7 +310,7 @@ class MyWindow(QtWidgets.QMainWindow):
                                 self.ui.tableWidget_2.setItem(
                                     i, j, QTableWidgetItem(str(ship.expiredShipCount)))
                                 tempFlag = True
-                            if((self.dictionary.choose_position_header_evry_two[ship.name] + " в " + str(datetime.date.today().year + 1)  + " году") == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
+                            if((self.dictionary.choose_position_header_evry_two[ship.name] + " в " + str(self.ui.comboBox.currentText())  + " году") == self.ui.tableWidget_2.horizontalHeaderItem(j).text()):
                                 self.ui.tableWidget_2.setItem(
                                     i, j, QTableWidgetItem(str(ship.expiredInNextYearCount)))
                                 tempFlag = True
@@ -498,12 +498,12 @@ class MyWindow(QtWidgets.QMainWindow):
                 sheet[get_column_letter(j+2)+ str(e_row + 2)] = '% с превыш. сроком'
                 tumbler_two = 3
             elif tumbler_two == 3:
-                sheet[get_column_letter(j+2)+ str(e_row)] = ' срок будет превышен в 2022'
+                sheet[get_column_letter(j+2)+ str(e_row)] = ' срок будет превышен в ' + str(self.ui.comboBox.currentText())
                 if summa == 0:
                     sheet[get_column_letter(j+2)+ str(e_row + 1)] = 0
                 else:
                     sheet[get_column_letter(j+2)+ str(e_row + 1)] = "=SUM(" + get_column_letter(j+2) + "1" + ":" + get_column_letter(j+2) + str(s_row - 1)  +")/" + get_column_letter(j) + str(s_row) + "* 100"
-                sheet[get_column_letter(j+2)+ str(e_row + 2)] = '% срок будет превышен в 2022'
+                sheet[get_column_letter(j+2)+ str(e_row + 2)] = '% срок будет превышен в ' + str(self.ui.comboBox.currentText())
                 finish_formula = finish_formula + get_column_letter(j+2)+ str(e_row + 1) + ','
                 tumbler_two = 1
 

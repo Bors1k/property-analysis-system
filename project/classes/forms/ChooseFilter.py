@@ -41,7 +41,7 @@ class ChooseFilter(QtWidgets.QDialog):
                 if(value == val):
                     self.vivod_header.append(key)
                     self.vivod_header.append(self.dictionary.choose_position_header_evry_two[key])
-                    self.vivod_header.append(self.dictionary.choose_position_header_evry_two[key] + " в " + str(datetime.date.today().year + 1)  + " году")
+                    self.vivod_header.append(self.dictionary.choose_position_header_evry_two[key] + " в " + str(self.my_window.ui.comboBox.currentText())  + " году")
                 
         self.my_window.ui.tableWidget_2.setColumnCount(len(self.vivod_header))
         self.my_window.ui.tableWidget_2.setHorizontalHeaderLabels(
