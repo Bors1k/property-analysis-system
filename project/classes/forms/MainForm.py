@@ -28,6 +28,7 @@ import pymorphy2.dawg
 import openpyxl
 import datetime
 import os
+import sys
 import json
 
 
@@ -68,6 +69,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_2.horizontalHeader().setStretchLastSection(True)
         self.ui.pushButton.clicked.connect(self.openChooseFilter)
         self.ui.pushButton_5.clicked.connect(self.resetAnalyz)
+        self.ui.pushButton_4.clicked.connect(self.fullSbros)
         self.ui.pushButton_6.clicked.connect(self.openChooseOtdelFilters)
         self.ui.pushButton_7.clicked.connect(self.startAnalyz)
         self.ui.pushButton.setEnabled(False)
@@ -93,6 +95,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
             self.ui.pushButton_2.setEnabled(True)
             self.ui.pushButton_3.setEnabled(True)
+            self.ui.pushButton_4.setEnabled(True)
             self.ui.label_animation.setMovie(None)
             self.movie.stop()
 
@@ -290,6 +293,23 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_2.clear()
         self.ui.tableWidget_2.setRowCount(0)
         self.ui.tableWidget_2.setColumnCount(0)
+
+    def fullSbros(self):
+        self.ui.tableWidget.clear()
+        self.ui.tableWidget.setRowCount(0)
+        self.ui.tableWidget.setColumnCount(0)
+        self.first = True
+        self.ui.tableWidget_2.clear()
+        self.ui.tableWidget_2.setRowCount(0)
+        self.ui.tableWidget_2.setColumnCount(0)
+        self.ui.pushButton.setEnabled(False)
+        self.ui.pushButton_5.setEnabled(False)
+        self.ui.pushButton_6.setEnabled(False)
+        self.ui.pushButton_7.setEnabled(False)
+        self.ui.comboBox.setEnabled(True)
+        # QtCore.QCoreApplication.quit()
+        # status = QtCore.QProcess.startDetached(sys.executable, sys.argv)
+        # print(status)
 
     def startAnalyz(self):
         self.dictionary.zapoln_dict()

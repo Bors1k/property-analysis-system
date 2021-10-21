@@ -339,6 +339,7 @@ class MyThread(QThread):
         self.my_window.ui.pushButton_2.setEnabled(False)
         self.my_window.ui.pushButton_3.setEnabled(False)
         self.my_window.ui.comboBox.setEnabled(False)
+        self.my_window.ui.pushButton_4.setEnabled(False)
         wb = openpyxl.load_workbook(self.my_window.filename[0])
         sheets = wb.sheetnames
 
@@ -396,6 +397,7 @@ class MyThread(QThread):
         self.my_window.ui.statusbar.showMessage('Таблица сконвертирована')
         self.my_window.ui.pushButton_2.setEnabled(True)
         self.my_window.ui.pushButton_3.setEnabled(True)
+        self.my_window.ui.pushButton_4.setEnabled(True)
         self.my_window.ui.label_animation.setMovie(None)
         self.my_window.movie.stop()
         self.send_mnozh.emit(self.mnozh)
