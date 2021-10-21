@@ -5,6 +5,7 @@ from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QFileDialog, QLabel, QTableWidgetItem, QAbstractItemView, QMessageBox
 
 from PyQt5.QtCore import QSize
+import pymorphy2_dicts
 
 from UIforms.MainForm.form import Ui_MainWindow
 from classes.forms.ChooseOtdelFilter import ChooseOtdelFilter
@@ -22,6 +23,8 @@ from openpyxl.styles.borders import BORDER_MEDIUM, Border, Side, BORDER_THIN
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment
 import pymorphy2
+import pymorphy2.opencorpora_dict
+import pymorphy2.dawg
 import openpyxl
 import datetime
 import os
@@ -176,11 +179,11 @@ class MyWindow(QtWidgets.QMainWindow):
         self.aboutForm.show()
 
     def add_dict_json(self):
-        imushestvo = self.spravForm.ui.textEdit.toPlainText()
-        srok_po_normam = int(self.spravForm.ui.textEdit_2.toPlainText())
+        imushestvo = self.spravForm.ui.textEdit.text()
+        srok_po_normam = int(self.spravForm.ui.textEdit_2.text())
         print(imushestvo)
         print(srok_po_normam)
-        morph = pymorphy2.MorphAnalyzer()
+        morph = pymorphy2.MorphAnalyzer(pymorphy2_dicts.get_path(), lang='ru-old')
         res = morph.parse(imushestvo)[0]
         res.inflect({'plur', 'gent'}) 
         print(res.inflect({'plur', 'gent'}).word)
@@ -213,7 +216,7 @@ class MyWindow(QtWidgets.QMainWindow):
     def del_dict_json(self):
         row = self.spravForm.ui.tableNorm.currentItem().row()
         cell =self.spravForm.ui.tableNorm.item(row, 0).text() 
-        morph = pymorphy2.MorphAnalyzer()
+        morph = pymorphy2.MorphAnalyzer(pymorphy2_dicts.get_path(), lang='ru-old')
         res = morph.parse(cell)[0]
         with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
             templates = json.load(f)
