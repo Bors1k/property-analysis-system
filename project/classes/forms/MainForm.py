@@ -221,30 +221,43 @@ class MyWindow(QtWidgets.QMainWindow):
         cell =self.spravForm.ui.tableNorm.item(row, 0).text() 
         morph = pymorphy2.MorphAnalyzer(pymorphy2_dicts.get_path(), lang='ru-old')
         res = morph.parse(cell)[0]
+        life_is_default = False
         with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
             templates = json.load(f)
-            lifetime = dict(templates['lifetime'])            
-            del lifetime[cell]
+            default_lifetime = dict(templates['default_lifetime'])
+            for key, value in default_lifetime.items():
+                if cell == key:
+                    life_is_default = True
+                    messagebox = QMessageBox(
+                        parent=self, text='Не возможно удалить значение словаря по умолчанию')
+                    messagebox.setWindowTitle('Внимание!')
+                    messagebox.setStyleSheet(
+                        '.QPushButton{background-color: #444444;color: white;}')
+                    messagebox.show()
 
-            choose_position = dict(templates['choose_position'])
-            del choose_position[cell]
+            if(not life_is_default):    
+                lifetime = dict(templates['lifetime'])            
+                del lifetime[cell]
 
-            choose_position_header = dict(templates['choose_position_header'])
-            del choose_position_header['Количество ' + res.inflect({'plur', 'gent'}).word]
+                choose_position = dict(templates['choose_position'])
+                del choose_position[cell]
 
-            choose_position_header_evry_two = dict(templates['choose_position_header_evry_two'])
-            del choose_position_header_evry_two['Количество ' + res.inflect({'plur', 'gent'}).word]
+                choose_position_header = dict(templates['choose_position_header'])
+                del choose_position_header['Количество ' + res.inflect({'plur', 'gent'}).word]
 
-        with open('C:\\Users\\Public\\property-analysis-system\\dicts.json', 'r+') as f:
-            json_data = json.load(f)
-            json_data['lifetime'] = lifetime
-            json_data['choose_position'] = choose_position
-            json_data['choose_position_header'] = choose_position_header
-            json_data['choose_position_header_evry_two'] = choose_position_header_evry_two
-            f.seek(0)
-            f.write(json.dumps(json_data))
-            f.truncate()
-        self.OpenSprav()
+                choose_position_header_evry_two = dict(templates['choose_position_header_evry_two'])
+                del choose_position_header_evry_two['Количество ' + res.inflect({'plur', 'gent'}).word]
+
+                with open('C:\\Users\\Public\\property-analysis-system\\dicts.json', 'r+') as f:
+                    json_data = json.load(f)
+                    json_data['lifetime'] = lifetime
+                    json_data['choose_position'] = choose_position
+                    json_data['choose_position_header'] = choose_position_header
+                    json_data['choose_position_header_evry_two'] = choose_position_header_evry_two
+                    f.seek(0)
+                    f.write(json.dumps(json_data))
+                    f.truncate()
+            self.OpenSprav()
         
     def OpenSprav(self):
         if (self.spravForm != None):

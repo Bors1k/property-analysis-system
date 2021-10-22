@@ -60,6 +60,7 @@ class Ui_MainWindow(object):
         self.pushButton_4.setMinimumSize(QtCore.QSize(0, 30))
         self.pushButton_4.setStyleSheet(".QPushButton {background-color: rgba(143, 144, 146, 80)}\n"
 ".QPushButton:hover{ background-color: rgba(143, 144, 146, 130)}")
+        
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/sbros.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_4.setIcon(icon2)
@@ -77,6 +78,7 @@ class Ui_MainWindow(object):
         self.label_2.setObjectName("label_2")
         self.horizontalLayout_2.addWidget(self.label_2)
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox.setStyleSheet(".QComboBox {background-color: rgba(143, 144, 146, 80)}")
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(10)
