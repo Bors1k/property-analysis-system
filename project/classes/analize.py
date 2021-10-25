@@ -122,12 +122,23 @@ class Analyze:
                                             for isckluchene in obj.isckluchene:
                                                 if isckluchene.lower() in self.dict_imushestvo[x]:
                                                     if obj.position != self.dictionary.choose_position_header[key]:
+
                                                         self.pass_add = False                                                    
 
                                         if self.pass_add:
                                             shipment = Shipment(key)
                                             item.addNewShipment(item.shipments,shipment,self.dict_kolvo[x],self.dict_srok_previshenia[x],self.dict_expired_in_next_year[x])
 
+                        else:
+                            for obj in self.words_of_exception:
+                                if obj.position in value:
+                                    for isckluchene in obj.isckluchene:
+                                        if isckluchene.lower() in self.dict_imushestvo[x]:
+                                            for key in self.dictionary.choose_position_header:
+                                                if(self.dictionary.choose_position_header[key]==self.dictionary.choose_position[obj.position]):
+                                                    shipment = Shipment(key)
+                                                    item.addNewShipment(item.shipments,shipment,self.dict_kolvo[x],self.dict_srok_previshenia[x],self.dict_expired_in_next_year[x])
+                                                                            
         return self.otdels
 
       

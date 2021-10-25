@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
 import datetime
-
+import json
+from classes.forms.SpravWindow import ObjectIckl
 from UIforms.ChooseFilter.ChooseFilter import Ui_Dialog_ChooseFilter
 from classes.dicts import Dictionary
 
@@ -18,6 +19,22 @@ class ChooseFilter(QtWidgets.QDialog):
         self.dictionary.zapoln_dict()
         for key, value in self.dictionary.choose_position.items():
             spisok.append(value)
+        self.words_of_exception = []
+        with open ("C:\\Users\\Public\\property-analysis-system\\iskl.json", encoding='utf-8') as f:
+            templates = json.load(f)
+            for dict_for_obj in templates:
+                obj = ObjectIckl(dict_for_obj['position'])
+                for iskl in dict_for_obj['isckluchene']:
+                    obj.add_iskluchene(iskl)                
+                self.words_of_exception.append(obj)
+
+        for obj in self.words_of_exception:
+            for isckluchene in obj.isckluchene:
+                try:
+                    spisok.remove(isckluchene.lower())
+                except ValueError:
+                    print('не удалось удалить ' + isckluchene)
+        
         self.ui.listWidget.addItems(spisok)
         self.ui.listWidget.setSelectionMode(
             QtWidgets.QAbstractItemView.ExtendedSelection

@@ -184,14 +184,10 @@ class MyWindow(QtWidgets.QMainWindow):
     def add_dict_json(self):
         imushestvo = self.spravForm.ui.textEdit.text()
         srok_po_normam = int(self.spravForm.ui.textEdit_2.text())
-        print(imushestvo)
-        print(srok_po_normam)
         morph = pymorphy2.MorphAnalyzer(pymorphy2_dicts.get_path(), lang='ru-old')
         res = morph.parse(imushestvo)[0]
         res.inflect({'plur', 'gent'}) 
-        print(res.inflect({'plur', 'gent'}).word)
         new_per = res.inflect({'gent'}).word
-        print(new_per)
 
         with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
             templates = json.load(f)
@@ -274,9 +270,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.spravForm.ui.centralwidget.setStyleSheet('.QTableWidget .QTableCornerButton::section {background-color: rgba(0,0,0,0);')
         with open ("C:\\Users\\Public\\property-analysis-system\\dicts.json", encoding='utf-8') as f:
             templates = json.load(f)
-            lifetime = dict(templates['lifetime'])
-            # print(lifetime)
-            
+            lifetime = dict(templates['lifetime'])          
             self.spravForm.ui.tableNorm.setColumnCount(2)
             self.spravForm.ui.tableNorm.setHorizontalHeaderLabels(
             ['Имущество', 'Срок по нормам'])
@@ -285,7 +279,6 @@ class MyWindow(QtWidgets.QMainWindow):
 
             schet = 0
             for key, value in lifetime.items():
-                # print(value)
                 self.spravForm.ui.tableNorm.setItem(
                     schet, 0, QTableWidgetItem(key))
                 self.spravForm.ui.tableNorm.setItem(
@@ -322,7 +315,6 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.comboBox.setEnabled(True)
         # QtCore.QCoreApplication.quit()
         # status = QtCore.QProcess.startDetached(sys.executable, sys.argv)
-        # print(status)
 
     def startAnalyz(self):
         self.dictionary.zapoln_dict()
