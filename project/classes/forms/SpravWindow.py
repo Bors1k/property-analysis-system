@@ -101,10 +101,6 @@ class SpravWindow(QtWidgets.QMainWindow):
             obj.add_iskluchene(value_dict)
             self.words_of_exception.append(obj)
 
-        for position in self.words_of_exception:
-            print(position.position)
-            print(position.isckluchene)
-
         self.new_position = True
         self.check_file = os.path.exists("C:\\Users\\Public\\property-analysis-system\\iskl.json")
         if self.check_file:

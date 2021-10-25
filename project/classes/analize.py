@@ -107,11 +107,6 @@ class Analyze:
                         obj.add_iskluchene(iskl)                
                     self.words_of_exception.append(obj)
 
-
-        for obj in self.words_of_exception:
-            for isckluchene in obj.isckluchene:
-                print(isckluchene)
-
         for item in self.otdels:
             for x in range(2,self.rownum):
                 if(item.getName().lower() == self.dict_name_otdel[x]):
