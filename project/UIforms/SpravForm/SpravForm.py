@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'SpravForm.ui'
+# Form implementation generated from reading ui file 'SpravForm_new.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.5
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(351, 600)
+        MainWindow.resize(386, 600)
         MainWindow.setStyleSheet("background-color: #444444;\n"
 "color: white;\n"
 "")
@@ -30,13 +30,37 @@ class Ui_MainWindow(object):
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         self.verticalLayout.addWidget(self.label_4)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.tableNorm = QtWidgets.QTableWidget(self.centralwidget)
         self.tableNorm.setEnabled(True)
         self.tableNorm.setStyleSheet(".QTableCornerButton::section{background-color: rgba(143, 144, 146, 100);}")
         self.tableNorm.setObjectName("tableNorm")
         self.tableNorm.setColumnCount(0)
         self.tableNorm.setRowCount(0)
-        self.verticalLayout.addWidget(self.tableNorm)
+        self.horizontalLayout_2.addWidget(self.tableNorm)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setWordWrap(True)
+        self.label.setObjectName("label")
+        self.verticalLayout_2.addWidget(self.label)
+        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.verticalLayout_2.addWidget(self.tableWidget)
+        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit.setObjectName("lineEdit")
+        self.verticalLayout_2.addWidget(self.lineEdit)
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.verticalLayout_2.addWidget(self.pushButton_3)
+        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_4.setObjectName("pushButton_4")
+        self.verticalLayout_2.addWidget(self.pushButton_4)
+        self.horizontalLayout_2.addLayout(self.verticalLayout_2)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.textEdit = QtWidgets.QLineEdit(self.centralwidget)
@@ -53,7 +77,6 @@ class Ui_MainWindow(object):
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName("pushButton_2")
         self.verticalLayout.addWidget(self.pushButton_2)
-        self.verticalLayout.setStretch(1, 9)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -63,5 +86,8 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_4.setText(_translate("MainWindow", "Нормы положенности"))
+        self.label.setText(_translate("MainWindow", "Список сложных слов относящихся только к данной категории"))
+        self.pushButton_3.setText(_translate("MainWindow", "Добавить слово исключение"))
+        self.pushButton_4.setText(_translate("MainWindow", "Удалить слово исключение"))
         self.pushButton.setText(_translate("MainWindow", "Добавить"))
         self.pushButton_2.setText(_translate("MainWindow", "Удалить"))

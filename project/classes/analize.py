@@ -1,5 +1,8 @@
 from classes.shipment import Shipment
 import xlwings as xw
+import json
+import os
+from classes.forms.SpravWindow import ObjectIckl
 # from classes.dicts import choose_position, choose_position_header
 from classes.dicts import Dictionary
 class Analyze:
@@ -23,6 +26,7 @@ class Analyze:
         self.imush = ''
         self.dictionary = Dictionary()
         self.dictionary.zapoln_dict()
+        self.words_of_exception = [] 
 
     def set_otdel(self, otdel):
         self.otdels = otdel
@@ -92,6 +96,21 @@ class Analyze:
 
 
         wbxl.close()
+        self.words_of_exception.clear() 
+        self.check_file = os.path.exists("C:\\Users\\Public\\property-analysis-system\\iskl.json")
+        if self.check_file:
+            with open ("C:\\Users\\Public\\property-analysis-system\\iskl.json", encoding='utf-8') as f:
+                templates = json.load(f)
+                for dict_for_obj in templates:
+                    obj = ObjectIckl(dict_for_obj['position'])
+                    for iskl in dict_for_obj['isckluchene']:
+                        obj.add_iskluchene(iskl)                
+                    self.words_of_exception.append(obj)
+
+
+        for obj in self.words_of_exception:
+            for isckluchene in obj.isckluchene:
+                print(isckluchene)
 
         for item in self.otdels:
             for x in range(2,self.rownum):
@@ -103,8 +122,16 @@ class Analyze:
                                     if 'стол' in self.dictionary.choose_position_header[key] and 'настол' in self.dict_imushestvo[x]:
                                         pass
                                     else:
-                                        shipment = Shipment(key)
-                                        item.addNewShipment(item.shipments,shipment,self.dict_kolvo[x],self.dict_srok_previshenia[x],self.dict_expired_in_next_year[x])
+                                        self.pass_add = True
+                                        for obj in self.words_of_exception:
+                                            for isckluchene in obj.isckluchene:
+                                                if isckluchene.lower() in self.dict_imushestvo[x]:
+                                                    if obj.position != self.dictionary.choose_position_header[key]:
+                                                        self.pass_add = False                                                    
+
+                                        if self.pass_add:
+                                            shipment = Shipment(key)
+                                            item.addNewShipment(item.shipments,shipment,self.dict_kolvo[x],self.dict_srok_previshenia[x],self.dict_expired_in_next_year[x])
 
         return self.otdels
 
